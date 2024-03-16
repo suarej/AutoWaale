@@ -2,7 +2,6 @@ import { View, Image, StyleSheet,Text} from "react-native";
 import { Fontisto } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
-import profileIcon from "../assets/profileIcon.jpeg"
 
 export default function Header(){
     return(
