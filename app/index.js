@@ -1,7 +1,4 @@
-import { StyleSheet, ImageBackground, View, Text } from "react-native";
-import {Link} from "expo-router";
-import LandingPage from "./landingPage";
-import auto from "../assets/auto.jpeg"
+import { StyleSheet, View, Text } from "react-native";
 import { useEffect, useState } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { FIREBASE_AUTH } from "../firebaseConfig";
@@ -13,7 +10,6 @@ export default function Page() {
 
   useEffect(()=> {
     onAuthStateChanged(FIREBASE_AUTH, (user)=> {
-      console.log(user);
       setUser(user);
     })
   },[user]);
