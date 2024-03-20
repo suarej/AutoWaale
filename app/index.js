@@ -16,7 +16,8 @@ export default function Page() {
 
   return (
     <View style={styles.container}>
-        {user ? 
+        {
+          user? 
           <Dashboard /> : <Loginform />
         }
     </View>
