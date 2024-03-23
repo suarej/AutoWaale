@@ -61,7 +61,7 @@ export default function SignUp() {
               createdAt: new Date().toUTCString(),
             });
             alert("Account created");
-            router.push('/dashboard');
+            router.push('/loginForm');
           })
           .catch((err) => alert(err.message, "Error"));
       } catch (error) {

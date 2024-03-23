@@ -11,6 +11,7 @@ import { FIREBASE_AUTH } from "../firebaseConfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { router } from "expo-router";
 import auti from "../assets/auti.jpeg";
+// import Rikshaw from "../assets/ricksaw.png"
 
 export default function Loginform() {
   const [email, setEmail] = useState("");

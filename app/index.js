@@ -1,26 +1,28 @@
 import { StyleSheet, View, Text } from "react-native";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { FIREBASE_AUTH } from "../firebaseConfig";
 import Loginform from "./loginForm";
 import Dashboard from "./dashboard";
+import Entypo from '@expo/vector-icons/Entypo';
+import * as SplashScreen from 'expo-splash-screen';
+import * as Font from 'expo-font';
+
+// SplashScreen.preventAutoHideAsync();
 
 export default function Page() {
   const [user, setUser] = useState();
 
-  useEffect(()=> {
-    onAuthStateChanged(FIREBASE_AUTH, (user)=> {
+  useEffect(() => {
+    onAuthStateChanged(FIREBASE_AUTH, (user) => {
       setUser(user);
-    })
-  },[user]);
+    });
+  }, [user]);
 
   return (
-    <View style={styles.container}>
-        {
-          user? 
-          <Dashboard /> : <Loginform />
-        }
-    </View>
+      <View style={styles.container}>
+        {user ? <Dashboard user={user} /> : <Loginform />}
+      </View>
   );
 }
 
@@ -30,8 +32,8 @@ const styles = StyleSheet.create({
   },
   img: {
     flex: 1,
-    resizeMode: 'center',
-    justifyContent: 'center',
-    opacity: 0.9
-  }
+    resizeMode: "center",
+    justifyContent: "center",
+    opacity: 0.9,
+  },
 });

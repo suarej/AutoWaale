@@ -1,28 +1,28 @@
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import {
-  SafeAreaView,
   StyleSheet,
-  Platform,
   View,
   Text,
   Dimensions,
-  StatusBar,
   TouchableOpacity,
+  Image,
 } from "react-native";
-import Header from "../components/header";
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 import Constants from "expo-constants";
 import { useState, useRef } from "react";
 import MapViewDirections from "react-native-maps-directions";
-import { FIREBASE_AUTH } from "../firebaseConfig";
+import { DB, FIREBASE_AUTH } from "../firebaseConfig";
 import { router } from "expo-router";
 import GetLocation from "react-native-get-location";
-import * as Location from 'expo-location';
+import * as Location from "expo-location";
 import { useEffect } from "react";
+import { ref, child, push, update, set } from "firebase/database";
+import { logOut } from "../services/signout";
+import Header from "../components/header";
+// import { FontAwesome6 } from '@expo/vector-icons';
+import { FontAwesome } from '@expo/vector-icons';
+import Map from "../assets/map.png";
 
-//https://www.npmjs.com/package/react-native-maps-directions
-//https://www.npmjs.com/package/react-native-maps
-//https://www.npmjs.com/package/react-native-google-places-autocomplete
 
 const { width, height } = Dimensions.get("window");
 
@@ -31,6 +31,7 @@ const LATITUDE_DELTA = 0.2;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 export default function Dashboard(props) {
+  const { user } = props;
   // const apiKey = process.env.EXPO_GOOGLE_MAPS_API_KEY;
   const key = "AIzaSyDs6dddB4WI6-2C2XIPIRY1Lqdc64BuwZk";
 
@@ -38,26 +39,30 @@ export default function Dashboard(props) {
   const [destination, setDestination] = useState("");
   const [showDirection, setShowDirection] = useState(false);
   const mapRef = useRef(null);
-  const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
   const [initialRegion, setInitialRegion] = useState(null);
-
-  let text = 'Waiting..';
-  if (errorMsg) {
-    text = errorMsg;
-  } else if (location) {
-    text = JSON.stringify(location);
-  }
+  const [placeName, setPlaceName] = useState(null);
 
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        setErrorMsg('Permission to access location was denied');
+      if (status !== "granted") {
+        setErrorMsg("Permission to access location was denied");
         return;
       }
       let location = await Location.getCurrentPositionAsync({});
-      setLocation(location.coords);
+      let geocode = await Location.reverseGeocodeAsync({
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+      });
+
+      // Assuming the first result is the most relevant
+      if (geocode.length > 0) {
+        setPlaceName(geocode[0].name);
+      } else {
+        setPlaceName("Unknown");
+      }
+      setOrigin(location.coords);
       setInitialRegion({
         latitude: location.coords.latitude,
         longitude: location.coords.longitude,
@@ -66,6 +71,8 @@ export default function Dashboard(props) {
       });
     })();
   }, []);
+
+  console.log(origin, "Origin");
 
   const handleSetOrigin = (details) => {
     // let x = GetCurrentLocation()
@@ -81,15 +88,30 @@ export default function Dashboard(props) {
     });
   };
 
+  const edgePaddingValue = 70;
+  const edgePadding = {
+    top: 250,
+    right: edgePaddingValue,
+    bottom: edgePaddingValue,
+    left: edgePaddingValue,
+  };
+
   const handleSetDestination = (details) => {
     setDestination({
       latitude: details?.geometry.location.lat,
       longitude: details?.geometry.location.lng,
     });
-    moveTo({
-      latitude: details?.geometry.location.lat,
-      longitude: details?.geometry.location.lng,
-    });
+    // moveTo({
+    //   latitude: details?.geometry.location.lat,
+    //   longitude: details?.geometry.location.lng,
+    // });
+    // alert(origin.latitude);
+    // alert(destination.latitude);
+      mapRef.current?.fitToCoordinates([{
+        latitude: 18.5521026, longitude: 73.7686943
+      }, {
+        latitude: 18.5913, longitude: 73.7389
+      }], { edgePadding });
   };
 
   const moveTo = async (position) => {
@@ -100,32 +122,6 @@ export default function Dashboard(props) {
     }
   };
 
-  // const GetCurrentLocation = GetLocation.getCurrentPosition({
-  //   enableHighAccuracy: true,
-  //   timeout: 60000,
-  // })
-  //   .then((location1) => {
-  //     console.log(location1);
-  //     const INITIAL_POSITION = {
-  //       latitude: location1.latitude,
-  //       longitude: location1.longitude,
-  //       latitudeDelta: LATITUDE_DELTA,
-  //       longitudeDelta: LONGITUDE_DELTA,
-  //     };
-  //     return INITIAL_POSITION;
-  //   })
-  //   .catch((error) => {
-  //     const { code, message } = error;
-  //     console.warn(code, message);
-  //   });
-
-  const edgePaddingValue = 70;
-  const edgePadding = {
-    top: 250,
-    right: 50,
-    bottom: 50,
-    left: 50,
-  };
   const traceRoute = () => {
     if (origin && destination) {
       setShowDirection(true);
@@ -133,45 +129,71 @@ export default function Dashboard(props) {
     }
   };
 
-  const signOut = () => {
-    router.push("/");
-    FIREBASE_AUTH.signOut();
+  const createSearchEntry = async () => {
+    const newPostKey = push(child(ref(DB), "users")).key;
+    try {
+      const result = await set(
+        ref(DB, "users/" + user.uid + "/rides/" + newPostKey),
+        {
+          origin: origin,
+          destination: destination,
+          uid: user.uid,
+          createdAt: new Date().toUTCString(),
+        }
+      );
+    } catch (error) {
+      console.error("Error:", error.message);
+    }
+  };
+
+  const handleSearch = async (position) => {
+    const camera = await mapRef.current?.getCamera();
+    const currentZoom = mapRef.current.getCamera().zoom;
+    if (camera) {
+      camera.center = position;
+      camera.zoom = 17.5;
+      mapRef.current?.animateCamera(camera, { duration: 2500 });
+    }
   };
 
   return (
     <View>
-    {initialRegion && 
-      <MapView
-        ref={mapRef}
-        style={styles.map}
-        provider={PROVIDER_GOOGLE}
-        initialRegion={initialRegion}
-      >
-        {location && <Marker coordinate={location} />}
-        {destination && <Marker coordinate={destination} />}
-        {showDirection && origin && destination && (
-          <MapViewDirections
-            origin={origin}
-            destination={destination}
-            apikey={key}
-            strokeColor="#3390FF"
-            strokeWidth={4}
-          />
-        )}
-      </MapView>
-    }
-    <Text style={styles.paragraph}>{text}</Text>
-    
-      {/* <View style={styles.searchContainer}>
+      <Header />
+      {initialRegion && (
+        <MapView
+          ref={mapRef}
+          style={styles.map}
+          provider={PROVIDER_GOOGLE}
+          initialRegion={initialRegion}
+        >
+          {origin && (
+            <Marker coordinate={origin}>
+              {/* <FontAwesome name="map-pin" size={32} color="#387ADF" /> */}
+              <Image source={Map} style={styles.mapimage}/>
+            </Marker>
+          )}
+          {destination && <Marker coordinate={destination} >
+            {/* <FontAwesome name="map-pin" size={32} color="#387ADF" /> */}
+           </Marker>}
+          {origin && destination && (
+            <MapViewDirections
+              origin={origin}
+              destination={destination}
+              apikey={key}
+              strokeColor="#3390FF"
+              strokeWidth={4}
+            />
+          )}
+        </MapView>
+      )}
+      <View style={styles.searchContainer}>
         <Text style={styles.getRideBold}> Get a ride </Text>
         <GooglePlacesAutocomplete
           styles={{ textInput: styles.input }}
-          placeholder="Pickup location"
+          placeholder={placeName || "Pickup location"}
           fetchDetails={true} // to search lat long
           onPress={(data, details = null) => {
             handleSetOrigin(details);
-            console.log(JSON.stringify(data));
-            console.log(JSON.stringify(details?.geometry?.location));
           }}
           query={{
             key: key,
@@ -184,21 +206,22 @@ export default function Dashboard(props) {
           fetchDetails={true} // to search lat long
           onPress={(data, details = null) => {
             handleSetDestination(details);
-            console.log(JSON.stringify(data));
-            console.log(JSON.stringify(details?.geometry?.location));
           }}
           query={{
             key: key,
             language: "en",
           }}
         />
-        <TouchableOpacity style={styles.searchButton} onPress={traceRoute}>
-          <Text style={styles.buttonText}> Search </Text>
+        <TouchableOpacity
+          style={styles.searchButton}
+          onPress={() => handleSearch(origin)}
+        >
+          <Text style={styles.buttonText}> Book Auto </Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.searchButton} onPress={signOut}>
+        {/* <TouchableOpacity style={styles.searchButton} onPress={logOut}>
           <Text style={styles.buttonText}> LogOut </Text>
-        </TouchableOpacity>
-      </View> */}
+        </TouchableOpacity> */}
+      </View>
     </View>
   );
 }
@@ -226,7 +249,7 @@ const styles = StyleSheet.create({
     elevation: 4,
     padding: 8,
     borderRadius: 8,
-    top: Constants.statusBarHeight + 8,
+    top: Constants.statusBarHeight,
     borderWidth: 0.5,
     gap: 6,
   },
@@ -238,9 +261,15 @@ const styles = StyleSheet.create({
     backgroundColor: "#bbb",
     borderRadius: 4,
     paddingVertical: 12,
-    marginTop: 16,
+    marginTop: 8,
   },
   buttonText: {
     textAlign: "center",
   },
+
+  mapimage: {
+    width: 35,
+    height: 35,
+    
+  }
 });
