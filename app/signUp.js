@@ -6,8 +6,9 @@ import {
   TouchableOpacity,
   ImageBackground,
   ActivityIndicator,
+  useColorScheme
 } from "react-native";
-import backsignup from "../assets/auti.jpeg";
+import backsignup from "../assets/ricksaw.png";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { DB, FIREBASE_AUTH } from "../firebaseConfig";
 import { ref, set } from "firebase/database";
@@ -31,6 +32,8 @@ export default function SignUp() {
     confirmPassword: false
   });
   const [loading, setisLoading] = useState(false);
+  const colorScheme = useColorScheme();
+
 
   const handleChange = (fieldName, value) => {
     setUserData({ ...userData, [fieldName]: value });
@@ -73,8 +76,8 @@ export default function SignUp() {
   };
 
   return (
-    <View style={styles.mainComponent}>
-      <ImageBackground source={backsignup} style={styles.signImg}>
+    <View style={colorScheme == "light" ? styles.mainContainer: styles.darkContainer}>
+      <ImageBackground style={styles.signImg}>
       {loading ? <ActivityIndicator size="large" color="#0000ff" /> :  
       <> 
         <Text style={styles.boldText}>Plan Your Ride!!</Text>
@@ -187,12 +190,21 @@ export default function SignUp() {
 }
 
 const styles = StyleSheet.create({
-  mainComponent: {
-    // alignItems: "center",
+  mainContainer: {
+    alignItems: "center",
     // borderWidth: 0.5,
-    // height: "100%",
-    // justifyContent: "center",
-    // gap: 7,
+    height: "100%",
+    justifyContent: "center",
+    gap: 7,
+    backgroundColor: "#C0C5CE",
+  },
+  darkContainer:{ 
+    backgroundColor: "#26282A",
+    alignItems: "center",
+    borderWidth: 0.5,
+    height: "100%",
+    justifyContent: "center",
+    gap: 7,  
   },
   signImg: {
     width: "100%",
@@ -216,9 +228,9 @@ const styles = StyleSheet.create({
     // backgroundColor: "#e1e1e1",
     // borderBottomWidth: 0.5,
     // padding: 5,
-    width: "70%",
+    width: "65%",
     // fontSize: 12,
-    // borderRadius: 5,
+    borderRadius: 0,
   },
   errorBlock: {
     // backgroundColor: "#000000",
@@ -233,8 +245,8 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.5,
     padding: 7,
     // width: "70%",
-    fontSize: 16,
-    borderRadius: 5,
+    fontSize: 12,
+    borderRadius: 8,
   },
   buttonTextRegister: {
     color: "#FFFFFF",
@@ -247,23 +259,24 @@ const styles = StyleSheet.create({
     padding: 14,
     width: "50%",
     marginBottom: 40,
-    backgroundColor: "#068FFF",
+    backgroundColor: "#21D375",
     marginTop: 16,
-    borderRadius: 5,
+    borderRadius: 8,
+  
   },
   disabledButton: {
     // borderWidth: 1,
-    padding: 10,
-    width: "50%",
-    marginBottom: 40,
+    padding: 8,
+    width: "40%",
+    marginBottom: 30,
     backgroundColor: "#E3E1D9",
-    marginTop: 14,
-    borderRadius: 5,
+    marginTop: 12,
+    borderRadius: 30,
   },
   disabledText: {
     color: "#000000",
     opacity: 0.3,
     textAlign: 'center',
     fontSize: 18
-  },
+  }
 });

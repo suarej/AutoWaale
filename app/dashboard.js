@@ -5,24 +5,19 @@ import {
   Text,
   Dimensions,
   TouchableOpacity,
-  Image,
+  Button,
 } from "react-native";
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 import Constants from "expo-constants";
 import { useState, useRef } from "react";
 import MapViewDirections from "react-native-maps-directions";
-import { DB, FIREBASE_AUTH } from "../firebaseConfig";
-import { router } from "expo-router";
-import GetLocation from "react-native-get-location";
+import { DB } from "../firebaseConfig";
 import * as Location from "expo-location";
 import { useEffect } from "react";
 import { ref, child, push, update, set } from "firebase/database";
-import { logOut } from "../services/signout";
 import Header from "../components/header";
-// import { FontAwesome6 } from '@expo/vector-icons';
+import { MaterialIcons } from "@expo/vector-icons";
 import { FontAwesome } from '@expo/vector-icons';
-import Map from "../assets/map.png";
-
 
 const { width, height } = Dimensions.get("window");
 
@@ -107,11 +102,19 @@ export default function Dashboard(props) {
     // });
     // alert(origin.latitude);
     // alert(destination.latitude);
-      mapRef.current?.fitToCoordinates([{
-        latitude: 18.5521026, longitude: 73.7686943
-      }, {
-        latitude: 18.5913, longitude: 73.7389
-      }], { edgePadding });
+    mapRef.current?.fitToCoordinates(
+      [
+        {
+          latitude: 18.5521026,
+          longitude: 73.7686943,
+        },
+        {
+          latitude: 18.5913,
+          longitude: 73.7389,
+        },
+      ],
+      { edgePadding }
+    );
   };
 
   const moveTo = async (position) => {
@@ -168,40 +171,53 @@ export default function Dashboard(props) {
         >
           {origin && (
             <Marker coordinate={origin}>
-              {/* <FontAwesome name="map-pin" size={32} color="#387ADF" /> */}
-              <Image source={Map} style={styles.mapimage}/>
+              <MaterialIcons name="location-on" size={32} color="red" />
             </Marker>
           )}
-          {destination && <Marker coordinate={destination} >
-            {/* <FontAwesome name="map-pin" size={32} color="#387ADF" /> */}
-           </Marker>}
+          {destination && (
+            <Marker coordinate={destination}>
+              <MaterialIcons name="location-on" size={32} color="red" />
+            </Marker>
+          )}
           {origin && destination && (
             <MapViewDirections
               origin={origin}
               destination={destination}
               apikey={key}
-              strokeColor="#3390FF"
-              strokeWidth={4}
+              strokeColor="#1E90FF"
+              strokeWidth={4.5}
             />
           )}
         </MapView>
       )}
       <View style={styles.searchContainer}>
-        <Text style={styles.getRideBold}> Get a ride </Text>
+        <Text style={styles.getRideBold}> GET A RIDE </Text>
         <GooglePlacesAutocomplete
-          styles={{ textInput: styles.input }}
-          placeholder={placeName || "Pickup location"}
+          placeholder={"Pickup location"}
           fetchDetails={true} // to search lat long
           onPress={(data, details = null) => {
             handleSetOrigin(details);
           }}
+          // getDefaultValue={() => {
+          //   return placeName; 
+          // }}
           query={{
             key: key,
             language: "en",
           }}
+          
+          styles={{
+            container: styles.mapTextContainer,
+            textInput: styles.input,
+            textInputContainer: styles.mapInputContainer,
+          }}
         />
         <GooglePlacesAutocomplete
-          styles={{ textInput: styles.input }}
+          styles={{ 
+            container: styles.mapTextContainer,
+            textInput: styles.input,
+            textInputContainer: styles.mapInputContainer,
+           }}
           placeholder="Dropoff location"
           fetchDetails={true} // to search lat long
           onPress={(data, details = null) => {
@@ -216,23 +232,32 @@ export default function Dashboard(props) {
           style={styles.searchButton}
           onPress={() => handleSearch(origin)}
         >
-          <Text style={styles.buttonText}> Book Auto </Text>
+          <Text style={styles.buttonText}> BOOK AUTO </Text>
         </TouchableOpacity>
-        {/* <TouchableOpacity style={styles.searchButton} onPress={logOut}>
-          <Text style={styles.buttonText}> LogOut </Text>
-        </TouchableOpacity> */}
       </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  mapTextContainer: {
+    flex: 1,
+    width: "100%",
+    borderWidth: 1
+  },
   input: {
-    //   borderColor: "#888",
-    //   borderWidth: 1,
-    backgroundColor: "#dcdcdc",
-    borderRadius: 5,
-    padding: 10,
+    // backgroundColor: "#dcdcdc",
+    // borderRadius: 5,
+    // padding: 10,
+    marginLeft: 0,
+    marginRight: 0,
+    height: 38,
+    color: "#5d5d5d",
+    fontSize: 16,
+  },
+  mapInputContainer: {
+    // backgroundColor: 'rgba(0,0,0,0)',
+    // borderWidth: 1,
   },
   map: {
     width: Dimensions.get("window").width,
@@ -258,18 +283,21 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   searchButton: {
-    backgroundColor: "#bbb",
-    borderRadius: 4,
+    backgroundColor: "#21D375",
+    borderRadius: 8,
     paddingVertical: 12,
-    marginTop: 8,
+    width: "50%",
+    marginLeft: "auto",
+    marginRight: "auto",
   },
   buttonText: {
     textAlign: "center",
+    color: "white",
+    borderRadius: 8,
+    fontWeight: "bold",
   },
-
   mapimage: {
     width: 35,
     height: 35,
-    
-  }
+  },
 });

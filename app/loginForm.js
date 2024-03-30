@@ -6,18 +6,23 @@ import {
   StyleSheet,
   TextInput,
   View,
+  Image,
+  Text,
+  useColorScheme,
+  TouchableOpacity
 } from "react-native";
 import { FIREBASE_AUTH } from "../firebaseConfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { router } from "expo-router";
-import auti from "../assets/auti.jpeg";
-// import Rikshaw from "../assets/ricksaw.png"
+import Rikshaw from "../assets/ricksaw.png"
+import { StatusBar } from 'expo-status-bar'
 
 export default function Loginform() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const auth = FIREBASE_AUTH;
+  const colorScheme = useColorScheme();
 
   const signIn = async () => {
     setLoading(true);
@@ -35,8 +40,11 @@ export default function Loginform() {
   };
 
   return (
-    <View style={styles.inputContainer}>
-      <ImageBackground source={auti} style={styles.sign}>
+    <View style={colorScheme == "light" ? styles.inputContainer: styles.darkContainer}>
+    
+      {/* <ImageBackground source={Rikshaw} style={styles.sign}> */}
+      <Image source={Rikshaw} style={styles.logo}/>
+      {/* <Text> AutoWaale </Text> */}
         <TextInput
           value={email}
           style={styles.inputWrapper}
@@ -57,12 +65,21 @@ export default function Loginform() {
         ) : (
           <>
             <View style={styles.buttons}>
-              <Button title="Login" onPress={signIn} />
-              <Button title="Create account" onPress={signUp} />
+            <TouchableOpacity onPress={signIn} style={styles.button}>
+            <Text style={styles.textBold}>
+              LOGIN
+            </Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={signUp} style={styles.button}>
+            <Text style={styles.textBold}>
+              SIGN UP
+            </Text>
+            </TouchableOpacity>
             </View>
           </>
         )}
-      </ImageBackground>
+      {/* </ImageBackground> */}
+      
     </View>
   );
 }
@@ -70,18 +87,23 @@ export default function Loginform() {
 const styles = StyleSheet.create({
   inputContainer: {
     alignItems: "center",
-    borderWidth: 0.5,
+    // borderWidth: 0.5,
     height: "100%",
     justifyContent: "center",
     gap: 7,
+    backgroundColor: "#C0C5CE",
   },
+  logo: {
+    width: 70,
+    height: 70
+  },  
   sign: {
     width: "100%",
     height: "100%",
     resizeMode: "cover",
     alignItems: "center",
     justifyContent: "center",
-    gap: 12,
+    gap: 12
   },
   inputWrapper: {
     backgroundColor: "#e1e1e1",
@@ -89,9 +111,29 @@ const styles = StyleSheet.create({
     padding: 7,
     width: "70%",
     fontSize: 15,
-    borderRadius: 5,
+    borderRadius: 8,
   },
   buttons: {
     gap: 8,
+    marginTop: 8,
+    borderRadius: 25,
   },
+  button: {
+    borderRadius: 25,
+    backgroundColor: "#21D375",
+    padding: 10,
+    paddingHorizontal: 40,
+  },
+  textBold:{
+    fontSize: 15,
+    fontWeight: "bold",
+  },
+  darkContainer:{
+    backgroundColor: "#26282A",
+    alignItems: "center",
+    borderWidth: 0.5,
+    height: "100%",
+    justifyContent: "center",
+    gap: 7,  
+  }
 });

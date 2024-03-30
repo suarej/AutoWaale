@@ -8,6 +8,7 @@ import LottieView from "lottie-react-native";
 import Entypo from "@expo/vector-icons/Entypo";
 import * as SplashScreen from "expo-splash-screen";
 import * as Font from "expo-font";
+import { StatusBar as ExpoStatusBar } from 'expo-status-bar';
 
 // SplashScreen.preventAutoHideAsync();
 
@@ -22,6 +23,7 @@ export default function Page() {
     });
   }, [user]);
 
+  // added timeout to replicate loading so that the loader is showing for 3 seconds
   useEffect(() => {
     async function prepare() {
       try {
@@ -40,6 +42,7 @@ export default function Page() {
     prepare();
   }, []);
 
+  // dont know yet how this is working
   const onLayoutRootView = useCallback(async () => {
     if (appIsReady) {
       // This tells the splash screen to hide immediately! If we call this after
@@ -51,16 +54,20 @@ export default function Page() {
     }
   }, [appIsReady]);
 
+
+  // playing spinnner till app is not ready!
   if (!appIsReady) {
     return (
       <View style={styles.animationContainer}>
+          <Text style={styles.loaderTitle}> AutoWaale </Text>
           <LottieView
             autoPlay
             ref={animation}
             style={{
-              width: 200,
-              height: 200,
-              backgroundColor: "#eee",
+              width: 300,
+              height: 300,
+              backgroundColor: "#FFE302",
+
             }}
             // Find more Lottie files at https://lottiefiles.com/featured
             source={require("../assets/loaderAnimation.json")}
@@ -71,6 +78,7 @@ export default function Page() {
 
   return (
     <View style={styles.container} onLayout={onLayoutRootView}>
+      <ExpoStatusBar style="light" backgroundColor="#C0C5CE" />
       {user ? <Dashboard user={user} /> : <Loginform />}
     </View>
   );
@@ -83,6 +91,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  loaderTitle: {
+    fontWeight: "bold",
+    fontSize: 18
+  },  
   img: {
     flex: 1,
     resizeMode: "center",
