@@ -18,6 +18,7 @@ import { ref, child, push, update, set } from "firebase/database";
 import Header from "../components/header";
 import { MaterialIcons } from "@expo/vector-icons";
 import { getDistance, convertDistance } from "geolib";
+import BotomRides from "./bottomRides";
 
 const { width, height } = Dimensions.get("window");
 
@@ -156,6 +157,7 @@ export default function Dashboard(props) {
       camera.zoom = 17.5;
       mapRef.current?.animateCamera(camera, { duration: 2500 });
     }
+    calculateDistance();
   };
 
   const calculateDistance = () => {
@@ -163,7 +165,6 @@ export default function Dashboard(props) {
       const meters = getDistance(origin, destination);
       const kilometers = convertDistance(meters, "km");
       setDistance(kilometers);
-      alert(distance);
     } else {
       setDistance(null);
     }
@@ -175,7 +176,7 @@ export default function Dashboard(props) {
       {initialRegion && (
         <MapView
           ref={mapRef}
-          style={styles.map}
+          style={distance ? styles.map: styles.fullMap}
           provider={PROVIDER_GOOGLE}
           initialRegion={initialRegion}
         >
@@ -200,7 +201,8 @@ export default function Dashboard(props) {
           )}
         </MapView>
       )}
-      <View style={styles.searchContainer}>
+
+      {!distance &&  <View style={styles.searchContainer}>
         <Text style={styles.getRideBold}> GET A RIDE </Text>
         <GooglePlacesAutocomplete
           placeholder={"Pickup location"}
@@ -239,8 +241,6 @@ export default function Dashboard(props) {
         />
 
         <View>
-          <Text>Distance: {distance ? `${distance} km` : "N/A"}</Text>
-          <Button title="Calculate Distance" onPress={calculateDistance} />
         </View>
         <TouchableOpacity
           style={styles.searchButton}
@@ -248,14 +248,9 @@ export default function Dashboard(props) {
         >
           <Text style={styles.buttonText}> BOOK AUTO </Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.searchButton}
-          onPress={() => confirmRide()}
+      </View>}
 
-        >
-          <Text style={styles.buttonText}>CONFIRM RIDE </Text>
-        </TouchableOpacity>
-      </View>
+      {distance && <BotomRides distance={distance}/>}
     </View>
   );
 }
@@ -281,6 +276,11 @@ const styles = StyleSheet.create({
     // borderWidth: 1,
   },
   map: {
+    width: Dimensions.get("window").width,
+    // height: Dimensions.get("window").height,
+    height: '73%'
+  },
+  fullMap: {
     width: Dimensions.get("window").width,
     height: Dimensions.get("window").height,
   },
