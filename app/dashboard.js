@@ -17,7 +17,7 @@ import { useEffect } from "react";
 import { ref, child, push, update, set } from "firebase/database";
 import Header from "../components/header";
 import { MaterialIcons } from "@expo/vector-icons";
-import { FontAwesome } from '@expo/vector-icons';
+import { getDistance, convertDistance } from "geolib";
 
 const { width, height } = Dimensions.get("window");
 
@@ -32,6 +32,7 @@ export default function Dashboard(props) {
 
   const [origin, setOrigin] = useState("");
   const [destination, setDestination] = useState("");
+  const [distance, setDistance] = useState("");
   const [showDirection, setShowDirection] = useState(false);
   const mapRef = useRef(null);
   const [errorMsg, setErrorMsg] = useState(null);
@@ -66,8 +67,6 @@ export default function Dashboard(props) {
       });
     })();
   }, []);
-
-  console.log(origin, "Origin");
 
   const handleSetOrigin = (details) => {
     // let x = GetCurrentLocation()
@@ -159,6 +158,17 @@ export default function Dashboard(props) {
     }
   };
 
+  const calculateDistance = () => {
+    if (origin && destination) {
+      const meters = getDistance(origin, destination);
+      const kilometers = convertDistance(meters, "km");
+      setDistance(kilometers);
+      alert(distance);
+    } else {
+      setDistance(null);
+    }
+  };
+
   return (
     <View>
       <Header />
@@ -199,13 +209,12 @@ export default function Dashboard(props) {
             handleSetOrigin(details);
           }}
           // getDefaultValue={() => {
-          //   return placeName; 
+          //   return placeName;
           // }}
           query={{
             key: key,
             language: "en",
           }}
-          
           styles={{
             container: styles.mapTextContainer,
             textInput: styles.input,
@@ -213,11 +222,11 @@ export default function Dashboard(props) {
           }}
         />
         <GooglePlacesAutocomplete
-          styles={{ 
+          styles={{
             container: styles.mapTextContainer,
             textInput: styles.input,
             textInputContainer: styles.mapInputContainer,
-           }}
+          }}
           placeholder="Dropoff location"
           fetchDetails={true} // to search lat long
           onPress={(data, details = null) => {
@@ -228,11 +237,23 @@ export default function Dashboard(props) {
             language: "en",
           }}
         />
+
+        <View>
+          <Text>Distance: {distance ? `${distance} km` : "N/A"}</Text>
+          <Button title="Calculate Distance" onPress={calculateDistance} />
+        </View>
         <TouchableOpacity
           style={styles.searchButton}
           onPress={() => handleSearch(origin)}
         >
           <Text style={styles.buttonText}> BOOK AUTO </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.searchButton}
+          onPress={() => confirmRide()}
+
+        >
+          <Text style={styles.buttonText}>CONFIRM RIDE </Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -243,7 +264,7 @@ const styles = StyleSheet.create({
   mapTextContainer: {
     flex: 1,
     width: "100%",
-    borderWidth: 1
+    borderWidth: 1,
   },
   input: {
     // backgroundColor: "#dcdcdc",

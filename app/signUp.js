@@ -15,6 +15,7 @@ import { ref, set } from "firebase/database";
 import { useState } from "react";
 import {router} from 'expo-router';
 
+
 export default function SignUp() {
   const [userData, setUserData] = useState({
     name: "",
@@ -33,7 +34,6 @@ export default function SignUp() {
   });
   const [loading, setisLoading] = useState(false);
   const colorScheme = useColorScheme();
-
 
   const handleChange = (fieldName, value) => {
     setUserData({ ...userData, [fieldName]: value });

@@ -54,8 +54,6 @@ export default function Page() {
     }
   }, [appIsReady]);
 
-
-  // playing spinnner till app is not ready!
   if (!appIsReady) {
     return (
       <View style={styles.animationContainer}>
@@ -67,9 +65,7 @@ export default function Page() {
               width: 300,
               height: 300,
               backgroundColor: "#FFE302",
-
             }}
-            // Find more Lottie files at https://lottiefiles.com/featured
             source={require("../assets/loaderAnimation.json")}
           />
         </View>
@@ -83,9 +79,6 @@ export default function Page() {
     </View>
   );
 }
-
-// animation.current?.reset();
-// animation.current?.play();
 
 const styles = StyleSheet.create({
   container: {

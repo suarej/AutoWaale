@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   Button,
@@ -8,21 +8,30 @@ import {
   View,
   Image,
   Text,
-  useColorScheme,
-  TouchableOpacity
+  TouchableOpacity,
+  Switch,
 } from "react-native";
 import { FIREBASE_AUTH } from "../firebaseConfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { router } from "expo-router";
-import Rikshaw from "../assets/ricksaw.png"
-import { StatusBar } from 'expo-status-bar'
+import Rikshaw from "../assets/ricksaw.png";
+import { getColorScheme } from "../services/colorScheme";
 
 export default function Loginform() {
+  const colorSchemeDef = getColorScheme();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const auth = FIREBASE_AUTH;
-  const colorScheme = useColorScheme();
+  const [colorScheme, setColorScheme] = useState(colorSchemeDef);
+
+  const handleForgotpassword = () => {
+    router.push("/forgotPassword");
+  };
+
+  const toggleSwitch = () => {
+    setColorScheme((previousState) => !previousState);
+  };
 
   const signIn = async () => {
     setLoading(true);
@@ -40,46 +49,47 @@ export default function Loginform() {
   };
 
   return (
-    <View style={colorScheme == "light" ? styles.inputContainer: styles.darkContainer}>
-    
-      {/* <ImageBackground source={Rikshaw} style={styles.sign}> */}
-      <Image source={Rikshaw} style={styles.logo}/>
-      {/* <Text> AutoWaale </Text> */}
-        <TextInput
-          value={email}
-          style={styles.inputWrapper}
-          placeholder="Email"
-          autoCapitalize="none"
-          onChangeText={(text) => setEmail(text)}
-        ></TextInput>
-        <TextInput
-          secureTextEntry={true}
-          value={password}
-          style={styles.inputWrapper}
-          placeholder="Password"
-          autoCapitalize="none"
-          onChangeText={(text) => setPassword(text)}
-        ></TextInput>
-        {loading ? (
-          <ActivityIndicator size="large" color="#0000ff" />
-        ) : (
-          <>
-            <View style={styles.buttons}>
+    <View style={colorScheme ? styles.inputContainer : styles.darkContainer}>
+      <Switch
+        trackColor={{ false: "#767577", true: "#21D375" }}
+        thumbColor="#f5dd4b"
+        ios_backgroundColor="#3e3e3e"
+        onValueChange={toggleSwitch}
+        value={colorScheme}
+      />
+      <Image source={Rikshaw} style={styles.logo} />
+      <TextInput
+        value={email}
+        style={styles.inputWrapper}
+        placeholder="Email"
+        autoCapitalize="none"
+        onChangeText={(text) => setEmail(text)}
+      ></TextInput>
+      <TextInput
+        secureTextEntry={true}
+        value={password}
+        style={styles.inputWrapper}
+        placeholder="Password"
+        autoCapitalize="none"
+        onChangeText={(text) => setPassword(text)}
+      ></TextInput>
+      {loading ? (
+        <ActivityIndicator size="large" color="#0000ff" />
+      ) : (
+        <>
+        <TouchableOpacity onPress={handleForgotpassword} style={styles.forgotButton}>
+        <Text>Forgot password?</Text>
+        </TouchableOpacity>
+          <View style={styles.buttons}>
             <TouchableOpacity onPress={signIn} style={styles.button}>
-            <Text style={styles.textBold}>
-              LOGIN
-            </Text>
+              <Text style={styles.textBold}>LOGIN</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={signUp} style={styles.button}>
-            <Text style={styles.textBold}>
-              SIGN UP
-            </Text>
+              <Text style={styles.textBold}>SIGN UP</Text>
             </TouchableOpacity>
-            </View>
-          </>
-        )}
-      {/* </ImageBackground> */}
-      
+          </View>
+        </>
+      )}
     </View>
   );
 }
@@ -87,7 +97,6 @@ export default function Loginform() {
 const styles = StyleSheet.create({
   inputContainer: {
     alignItems: "center",
-    // borderWidth: 0.5,
     height: "100%",
     justifyContent: "center",
     gap: 7,
@@ -95,15 +104,15 @@ const styles = StyleSheet.create({
   },
   logo: {
     width: 70,
-    height: 70
-  },  
+    height: 70,
+  },
   sign: {
     width: "100%",
     height: "100%",
     resizeMode: "cover",
     alignItems: "center",
     justifyContent: "center",
-    gap: 12
+    gap: 12,
   },
   inputWrapper: {
     backgroundColor: "#e1e1e1",
@@ -124,16 +133,21 @@ const styles = StyleSheet.create({
     padding: 10,
     paddingHorizontal: 40,
   },
-  textBold:{
+  textBold: {
     fontSize: 15,
     fontWeight: "bold",
   },
-  darkContainer:{
+  darkContainer: {
     backgroundColor: "#26282A",
     alignItems: "center",
     borderWidth: 0.5,
     height: "100%",
     justifyContent: "center",
-    gap: 7,  
+    gap: 7,
+  },
+  forgotButton:{
+    borderBottomWidth: 0.5
+
+
   }
 });
