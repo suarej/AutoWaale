@@ -249,19 +249,21 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   buttonTextRegister: {
-    color: "#FFFFFF",
+    color: "#000000",
     textAlign: 'center',
     fontSize: 16,
     fontWeight: 'bold'
   },
   registerButton: {
     // borderWidth: 1,
-    padding: 14,
+    
     width: "50%",
     marginBottom: 40,
     backgroundColor: "#21D375",
     marginTop: 16,
-    borderRadius: 8,
+    borderRadius: 25,
+    padding: 10,
+    paddingHorizontal: 40,
   
   },
   disabledButton: {

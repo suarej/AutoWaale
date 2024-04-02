@@ -19,6 +19,7 @@ import Header from "../components/header";
 import { MaterialIcons } from "@expo/vector-icons";
 import { getDistance, convertDistance } from "geolib";
 import BotomRides from "./bottomRides";
+import LocationInputs from "./locationInputs";
 
 const { width, height } = Dimensions.get("window");
 
@@ -149,11 +150,11 @@ export default function Dashboard(props) {
     }
   };
 
-  const handleSearch = async (position) => {
+  const handleSearch = async () => {
     const camera = await mapRef.current?.getCamera();
     const currentZoom = mapRef.current.getCamera().zoom;
     if (camera) {
-      camera.center = position;
+      camera.center = origin;
       camera.zoom = 17.5;
       mapRef.current?.animateCamera(camera, { duration: 2500 });
     }
@@ -176,7 +177,7 @@ export default function Dashboard(props) {
       {initialRegion && (
         <MapView
           ref={mapRef}
-          style={distance ? styles.map: styles.fullMap}
+          style={distance ? styles.map : styles.fullMap}
           provider={PROVIDER_GOOGLE}
           initialRegion={initialRegion}
         >
@@ -201,124 +202,27 @@ export default function Dashboard(props) {
           )}
         </MapView>
       )}
-
-      {!distance &&  <View style={styles.searchContainer}>
-        <Text style={styles.getRideBold}> GET A RIDE </Text>
-        <GooglePlacesAutocomplete
-          placeholder={"Pickup location"}
-          fetchDetails={true} // to search lat long
-          onPress={(data, details = null) => {
-            handleSetOrigin(details);
-          }}
-          // getDefaultValue={() => {
-          //   return placeName;
-          // }}
-          query={{
-            key: key,
-            language: "en",
-          }}
-          styles={{
-            container: styles.mapTextContainer,
-            textInput: styles.input,
-            textInputContainer: styles.mapInputContainer,
-          }}
+      {distance ? (
+        <BotomRides distance={distance} />
+      ) : (
+        <LocationInputs
+          handleSetOrigin={handleSetOrigin}
+          handleSetDestination={handleSetDestination}
+          handleSearch={handleSearch}
         />
-        <GooglePlacesAutocomplete
-          styles={{
-            container: styles.mapTextContainer,
-            textInput: styles.input,
-            textInputContainer: styles.mapInputContainer,
-          }}
-          placeholder="Dropoff location"
-          fetchDetails={true} // to search lat long
-          onPress={(data, details = null) => {
-            handleSetDestination(details);
-          }}
-          query={{
-            key: key,
-            language: "en",
-          }}
-        />
-
-        <View>
-        </View>
-        <TouchableOpacity
-          style={styles.searchButton}
-          onPress={() => handleSearch(origin)}
-        >
-          <Text style={styles.buttonText}> BOOK AUTO </Text>
-        </TouchableOpacity>
-      </View>}
-
-      {distance && <BotomRides distance={distance}/>}
+      )}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  mapTextContainer: {
-    flex: 1,
-    width: "100%",
-    borderWidth: 1,
-  },
-  input: {
-    // backgroundColor: "#dcdcdc",
-    // borderRadius: 5,
-    // padding: 10,
-    marginLeft: 0,
-    marginRight: 0,
-    height: 38,
-    color: "#5d5d5d",
-    fontSize: 16,
-  },
-  mapInputContainer: {
-    // backgroundColor: 'rgba(0,0,0,0)',
-    // borderWidth: 1,
-  },
   map: {
     width: Dimensions.get("window").width,
     // height: Dimensions.get("window").height,
-    height: '73%'
+    height: "73%",
   },
   fullMap: {
     width: Dimensions.get("window").width,
     height: Dimensions.get("window").height,
-  },
-  searchContainer: {
-    position: "absolute",
-    width: "100%",
-    backgroundColor: "white",
-    shadowColor: "black",
-    shadowOffset: { width: 2, height: 2 },
-    shadowOpacity: 0.5,
-    shadowRadius: 4,
-    elevation: 4,
-    padding: 8,
-    borderRadius: 8,
-    top: Constants.statusBarHeight,
-    borderWidth: 0.5,
-    gap: 6,
-  },
-  getRideBold: {
-    fontWeight: "bold",
-    fontSize: 20,
-  },
-  searchButton: {
-    backgroundColor: "#21D375",
-    borderRadius: 8,
-    paddingVertical: 12,
-    width: "50%",
-    marginLeft: "auto",
-    marginRight: "auto",
-  },
-  buttonText: {
-    textAlign: "center",
-    color: "white",
-    borderRadius: 8,
-    fontWeight: "bold",
-  },
-  mapimage: {
-    width: 35,
-    height: 35,
-  },
+  }
 });

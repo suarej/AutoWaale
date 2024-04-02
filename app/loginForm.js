@@ -50,6 +50,7 @@ export default function Loginform() {
 
   return (
     <View style={colorScheme ? styles.inputContainer : styles.darkContainer}>
+      <View style={styles.toggleBox}> 
       <Switch
         trackColor={{ false: "#767577", true: "#21D375" }}
         thumbColor="#f5dd4b"
@@ -57,6 +58,7 @@ export default function Loginform() {
         onValueChange={toggleSwitch}
         value={colorScheme}
       />
+      </View>
       <Image source={Rikshaw} style={styles.logo} />
       <TextInput
         value={email}
@@ -101,6 +103,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     gap: 7,
     backgroundColor: "#C0C5CE",
+  },
+  toggleBox: {
+    position: 'absolute',
+    top: 0,
+    right: 20
   },
   logo: {
     width: 70,
