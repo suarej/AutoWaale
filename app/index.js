@@ -8,7 +8,8 @@ import LottieView from "lottie-react-native";
 import Entypo from "@expo/vector-icons/Entypo";
 import * as SplashScreen from "expo-splash-screen";
 import * as Font from "expo-font";
-import { StatusBar as ExpoStatusBar } from 'expo-status-bar';
+import { StatusBar as ExpoStatusBar } from "expo-status-bar";
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 // SplashScreen.preventAutoHideAsync();
 
@@ -57,25 +58,27 @@ export default function Page() {
   if (!appIsReady) {
     return (
       <View style={styles.animationContainer}>
-          <Text style={styles.loaderTitle}> AutoWaale </Text>
-          <LottieView
-            autoPlay
-            ref={animation}
-            style={{
-              width: 300,
-              height: 300,
-              backgroundColor: "#FFE302",
-            }}
-            source={require("../assets/loaderAnimation.json")}
-          />
-        </View>
+        <Text style={styles.loaderTitle}> AutoWaale </Text>
+        <LottieView
+          autoPlay
+          ref={animation}
+          style={{
+            width: 300,
+            height: 300,
+            backgroundColor: "#FFE302",
+          }}
+          source={require("../assets/loaderAnimation.json")}
+        />
+      </View>
     );
   }
 
   return (
     <View style={styles.container} onLayout={onLayoutRootView}>
-      <ExpoStatusBar style="light" backgroundColor="#C0C5CE" />
-      {user ? <Dashboard user={user} /> : <Loginform />}
+      <GestureHandlerRootView>
+        <ExpoStatusBar style="light" backgroundColor="#C0C5CE" />
+        {user ? <Dashboard user={user} /> : <Loginform />}
+      </GestureHandlerRootView>
     </View>
   );
 }
@@ -86,8 +89,8 @@ const styles = StyleSheet.create({
   },
   loaderTitle: {
     fontWeight: "bold",
-    fontSize: 18
-  },  
+    fontSize: 18,
+  },
   img: {
     flex: 1,
     resizeMode: "center",

@@ -1,32 +1,51 @@
 import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 import Ricksaw from "../assets/ricksaw.png";
+import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
+import { useMemo, useRef } from "react";
 
 export default function BotomRides(props) {
+  const snapPoints = useMemo(() => ["35%", "50%"], []);
+  const bottomSheetRef = useRef(null);
   const { distance } = props;
   const formattedFare = parseFloat(distance * 20).toFixed(2);
   const formattedDistance = parseFloat(distance).toFixed(2);
 
   return (
-    <View style={styles.rideContainer}>
-      <Image source={Ricksaw} style={styles.imgAuto} />
-      <View style={styles.textBox}>
-        <View styles={{ justifyContent: "space-between" }}>
-            <Text> Distance: {formattedDistance} Km</Text>
-          <Text> Rikshwaw: ₹{formattedFare} </Text>
-          {/* <Text> 115.71</Text> */}
-        </View>
-        <View>
-          {/* <Text> 10:25PM: </Text> */}
-          {/* <Text style={styles.strikethrough}> 145.71 </Text> */}
-        </View>
-      </View>
-      <TouchableOpacity
-        style={styles.searchButton}
-        // onPress={() => handleSearch(origin)}
+    // <View style={styles.container}>
+      <BottomSheet
+        ref={bottomSheetRef}
+        snapPoints={snapPoints}
+        index={1}
+        enablePanDownToClose={true}
+        // onChange={handleSheetChanges}
       >
-        <Text style={styles.buttonText}> CONFIRM RIDE </Text>
-      </TouchableOpacity>
-    </View>
+        <View style={styles.container}>
+        <Image source={Ricksaw} style={styles.imgAuto} />
+        <View style={styles.textBox}>
+          <View styles={{ justifyContent: "space-between" }}>
+            <Text> Distance: {formattedDistance} Km</Text>
+            <Text> Rikshwaw: ₹{formattedFare} </Text>
+          </View>
+          <View>
+          </View>
+        </View>
+        <Image source={Ricksaw} style={styles.imgAuto} />
+        <View style={styles.textBox}>
+          <View styles={{ justifyContent: "space-between" }}>
+            <Text> Distance: {formattedDistance} Km</Text>
+            <Text> Rikshwaw: ₹{formattedFare} </Text>
+          </View>
+          <View>
+          </View>
+        </View>
+        <TouchableOpacity
+          style={styles.searchButton}
+        >
+          <Text style={styles.buttonText}> CONFIRM RIDE </Text>
+        </TouchableOpacity>
+        </View>
+      </BottomSheet>
+    // </View>
   );
 }
 
@@ -68,4 +87,37 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     fontWeight: "bold",
   },
+  container: {
+    flex: 1,
+    // padding: 24,
+    marginTop: 10,
+    // backgroundColor: 'grey',
+    alignItems: 'center'
+  },
+  contentContainer: {
+    flex: 1,
+    alignItems: 'center',
+    backgroundColor: 'red'
+  },
 });
+
+
+{/* <View style={styles.container}>
+      <BottomSheet snapPoints={snapPoints}>
+        <Image source={Ricksaw} style={styles.imgAuto} />
+        <View style={styles.textBox}>
+          <View styles={{ justifyContent: "space-between" }}>
+            <Text> Distance: {formattedDistance} Km</Text>
+            <Text> Rikshwaw: ₹{formattedFare} </Text>
+          </View>
+          <View>
+          </View>
+        </View>
+        <TouchableOpacity
+          style={styles.searchButton}
+        >
+          <Text style={styles.buttonText}> CONFIRM RIDE </Text>
+        </TouchableOpacity>
+        <Text> abcdefgh</Text>
+      </BottomSheet>
+    </View> */}

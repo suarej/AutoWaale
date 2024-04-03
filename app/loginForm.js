@@ -50,14 +50,14 @@ export default function Loginform() {
 
   return (
     <View style={colorScheme ? styles.inputContainer : styles.darkContainer}>
-      <View style={styles.toggleBox}> 
-      <Switch
-        trackColor={{ false: "#767577", true: "#21D375" }}
-        thumbColor="#f5dd4b"
-        ios_backgroundColor="#3e3e3e"
-        onValueChange={toggleSwitch}
-        value={colorScheme}
-      />
+      <View style={styles.toggleBox}>
+        <Switch
+          trackColor={{ false: "#767577", true: "#21D375" }}
+          thumbColor="#f5dd4b"
+          ios_backgroundColor="#3e3e3e"
+          onValueChange={toggleSwitch}
+          value={colorScheme}
+        />
       </View>
       <Image source={Rikshaw} style={styles.logo} />
       <TextInput
@@ -79,9 +79,12 @@ export default function Loginform() {
         <ActivityIndicator size="large" color="#0000ff" />
       ) : (
         <>
-        <TouchableOpacity onPress={handleForgotpassword} style={styles.forgotButton}>
-        <Text>Forgot password?</Text>
-        </TouchableOpacity>
+          <TouchableOpacity
+            onPress={handleForgotpassword}
+            style={styles.forgotButton}
+          >
+            <Text>Forgot password?</Text>
+          </TouchableOpacity>
           <View style={styles.buttons}>
             <TouchableOpacity onPress={signIn} style={styles.button}>
               <Text style={styles.textBold}>LOGIN</Text>
@@ -105,9 +108,9 @@ const styles = StyleSheet.create({
     backgroundColor: "#C0C5CE",
   },
   toggleBox: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
-    right: 20
+    right: 20,
   },
   logo: {
     width: 70,
@@ -152,9 +155,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     gap: 7,
   },
-  forgotButton:{
-    borderBottomWidth: 0.5
-
-
-  }
+  forgotButton: {
+    borderBottomWidth: 0.5,
+  },
 });

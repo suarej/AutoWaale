@@ -172,12 +172,12 @@ export default function Dashboard(props) {
   };
 
   return (
-    <View>
+    <>
       <Header />
       {initialRegion && (
         <MapView
           ref={mapRef}
-          style={distance ? styles.map : styles.fullMap}
+          style={styles.fullMap}
           provider={PROVIDER_GOOGLE}
           initialRegion={initialRegion}
         >
@@ -211,7 +211,7 @@ export default function Dashboard(props) {
           handleSearch={handleSearch}
         />
       )}
-    </View>
+    </>
   );
 }
 
