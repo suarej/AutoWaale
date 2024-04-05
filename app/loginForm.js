@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   ActivityIndicator,
   Button,
@@ -9,28 +9,25 @@ import {
   Image,
   Text,
   TouchableOpacity,
-  Switch,
 } from "react-native";
 import { FIREBASE_AUTH } from "../firebaseConfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { router } from "expo-router";
 import Rikshaw from "../assets/ricksaw.png";
-import { getColorScheme } from "../services/colorScheme";
+import { AppContext } from "../context";
 
-export default function Loginform() {
-  const colorSchemeDef = getColorScheme();
+export default function Loginform(props) {
+  const {colorScheme} = props;
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const auth = FIREBASE_AUTH;
-  const [colorScheme, setColorScheme] = useState(colorSchemeDef);
+  const { toggle } = useContext(AppContext);
+  
+  console.log(toggle);
 
   const handleForgotpassword = () => {
     router.push("/forgotPassword");
-  };
-
-  const toggleSwitch = () => {
-    setColorScheme((previousState) => !previousState);
   };
 
   const signIn = async () => {
@@ -50,15 +47,6 @@ export default function Loginform() {
 
   return (
     <View style={colorScheme ? styles.inputContainer : styles.darkContainer}>
-      <View style={styles.toggleBox}>
-        <Switch
-          trackColor={{ false: "#767577", true: "#21D375" }}
-          thumbColor="#f5dd4b"
-          ios_backgroundColor="#3e3e3e"
-          onValueChange={toggleSwitch}
-          value={colorScheme}
-        />
-      </View>
       <Image source={Rikshaw} style={styles.logo} />
       <TextInput
         value={email}
@@ -106,11 +94,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     gap: 7,
     backgroundColor: "#C0C5CE",
-  },
-  toggleBox: {
-    position: "absolute",
-    top: 0,
-    right: 20,
   },
   logo: {
     width: 70,

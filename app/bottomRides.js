@@ -29,15 +29,6 @@ export default function BotomRides(props) {
           <View>
           </View>
         </View>
-        <Image source={Ricksaw} style={styles.imgAuto} />
-        <View style={styles.textBox}>
-          <View styles={{ justifyContent: "space-between" }}>
-            <Text> Distance: {formattedDistance} Km</Text>
-            <Text> Rikshwaw: ₹{formattedFare} </Text>
-          </View>
-          <View>
-          </View>
-        </View>
         <TouchableOpacity
           style={styles.searchButton}
         >
@@ -75,7 +66,7 @@ const styles = StyleSheet.create({
   },
   searchButton: {
     backgroundColor: "#21D375",
-    borderRadius: 8,
+    borderRadius: 25,
     paddingVertical: 12,
     width: "50%",
     marginLeft: "auto",
@@ -83,14 +74,14 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     textAlign: "center",
-    color: "white",
-    borderRadius: 8,
+    color: "black",
+    borderRadius: 25,
     fontWeight: "bold",
   },
   container: {
     flex: 1,
     // padding: 24,
-    marginTop: 10,
+    marginTop: 100,
     // backgroundColor: 'grey',
     alignItems: 'center'
   },

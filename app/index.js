@@ -1,5 +1,5 @@
-import { StyleSheet, View, Text, Button } from "react-native";
-import { useEffect, useState, useRef, useCallback } from "react";
+import { StyleSheet, View, Text, Button, Switch } from "react-native";
+import { useEffect, useState, useRef, useCallback, useContext } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { FIREBASE_AUTH } from "../firebaseConfig";
 import Loginform from "./loginForm";
@@ -9,18 +9,26 @@ import Entypo from "@expo/vector-icons/Entypo";
 import * as SplashScreen from "expo-splash-screen";
 import * as Font from "expo-font";
 import { StatusBar as ExpoStatusBar } from "expo-status-bar";
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { getDatabase, ref, child, get } from "firebase/database";
+import { getColorScheme } from "../services/colorScheme";
+import{AppContext, AppProvider } from "../context";
+const colorSchemeDef = getColorScheme();
 
 // SplashScreen.preventAutoHideAsync();
 
 export default function Page() {
   const [appIsReady, setAppIsReady] = useState(false);
   const [user, setUser] = useState();
+  const [userInfo, setUserInfo] = useState();
   const animation = useRef(null);
+  const [colorScheme, setColorScheme] = useState(colorSchemeDef);
+  
 
   useEffect(() => {
     onAuthStateChanged(FIREBASE_AUTH, (user) => {
       setUser(user);
+      user && getCurrentUSer(user?.uid);
     });
   }, [user]);
 
@@ -73,11 +81,47 @@ export default function Page() {
     );
   }
 
+  function getCurrentUSer(userId) {
+    const dbRef = ref(getDatabase());
+    get(child(dbRef, `users/${userId}`))
+      .then((snapshot) => {
+        if (snapshot.exists()) {
+          setUserInfo(snapshot.val());
+        } else {
+          console.log("No data availabl");
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+
+  const toggleSwitch = () => {
+    setColorScheme((previousState) => !previousState);
+  };
+
+  // alert(user, 'got the user');
+
   return (
     <View style={styles.container} onLayout={onLayoutRootView}>
       <GestureHandlerRootView>
+        <AppProvider> 
+        {/* <View style={styles.toggleBox}>
+          <Switch
+            trackColor={{ false: "#767577", true: "#21D375" }}
+            thumbColor="#f5dd4b"
+            ios_backgroundColor="#3e3e3e"
+            onValueChange={toggleSwitch}
+            value={colorScheme}
+          />
+        </View> */}
         <ExpoStatusBar style="light" backgroundColor="#C0C5CE" />
-        {user ? <Dashboard user={user} /> : <Loginform />}
+        {user ? (
+          <Dashboard user={user} userInfo={userInfo} />
+        ) : (
+          <Loginform colorScheme={colorScheme} />
+        )}
+        </AppProvider>
       </GestureHandlerRootView>
     </View>
   );
@@ -105,5 +149,12 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     paddingTop: 20,
+  },
+  toggleBox: {
+    // position: 'absolute',
+    // top: 0,
+    // right: 20,
+    backgroundColor: '#C0C5CE',
+    paddingRight: 20
   },
 });

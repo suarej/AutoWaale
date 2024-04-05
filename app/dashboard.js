@@ -16,7 +16,8 @@ import * as Location from "expo-location";
 import { useEffect } from "react";
 import { ref, child, push, update, set } from "firebase/database";
 import Header from "../components/header";
-import { MaterialIcons } from "@expo/vector-icons";
+// import { MaterialIcons } from "@expo/vector-icons";
+import { FontAwesome5 } from '@expo/vector-icons';
 import { getDistance, convertDistance } from "geolib";
 import BotomRides from "./bottomRides";
 import LocationInputs from "./locationInputs";
@@ -28,7 +29,7 @@ const LATITUDE_DELTA = 0.2;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 export default function Dashboard(props) {
-  const { user } = props;
+  const { user, userInfo } = props;
   // const apiKey = process.env.EXPO_GOOGLE_MAPS_API_KEY;
   const key = "AIzaSyDs6dddB4WI6-2C2XIPIRY1Lqdc64BuwZk";
 
@@ -173,7 +174,7 @@ export default function Dashboard(props) {
 
   return (
     <>
-      <Header />
+      <Header userInfo={userInfo}/>
       {initialRegion && (
         <MapView
           ref={mapRef}
@@ -183,12 +184,12 @@ export default function Dashboard(props) {
         >
           {origin && (
             <Marker coordinate={origin}>
-              <MaterialIcons name="location-on" size={32} color="red" />
+            <FontAwesome5 name="car" size={24} color="red" />
             </Marker>
           )}
           {destination && (
             <Marker coordinate={destination}>
-              <MaterialIcons name="location-on" size={32} color="red" />
+            <FontAwesome5 name="map-marker-alt" size={24} color="red" />
             </Marker>
           )}
           {origin && destination && (
