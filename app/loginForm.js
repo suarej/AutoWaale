@@ -15,16 +15,14 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { router } from "expo-router";
 import Rikshaw from "../assets/ricksaw.png";
 import { AppContext } from "../context";
+import ThemedButton from "../components/themeButton";
 
 export default function Loginform(props) {
-  const {colorScheme} = props;
+  const {colorScheme} = useContext(AppContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const auth = FIREBASE_AUTH;
-  const { toggle } = useContext(AppContext);
-  
-  console.log(toggle);
 
   const handleForgotpassword = () => {
     router.push("/forgotPassword");
@@ -47,6 +45,7 @@ export default function Loginform(props) {
 
   return (
     <View style={colorScheme ? styles.inputContainer : styles.darkContainer}>
+      <ThemedButton />
       <Image source={Rikshaw} style={styles.logo} />
       <TextInput
         value={email}

@@ -1,5 +1,5 @@
-import { StyleSheet, View, Text, Button, Switch } from "react-native";
-import { useEffect, useState, useRef, useCallback, useContext } from "react";
+import { StyleSheet, View, Text } from "react-native";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { FIREBASE_AUTH } from "../firebaseConfig";
 import Loginform from "./loginForm";
@@ -11,9 +11,6 @@ import * as Font from "expo-font";
 import { StatusBar as ExpoStatusBar } from "expo-status-bar";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { getDatabase, ref, child, get } from "firebase/database";
-import { getColorScheme } from "../services/colorScheme";
-import{AppContext, AppProvider } from "../context";
-const colorSchemeDef = getColorScheme();
 
 // SplashScreen.preventAutoHideAsync();
 
@@ -22,9 +19,7 @@ export default function Page() {
   const [user, setUser] = useState();
   const [userInfo, setUserInfo] = useState();
   const animation = useRef(null);
-  const [colorScheme, setColorScheme] = useState(colorSchemeDef);
   
-
   useEffect(() => {
     onAuthStateChanged(FIREBASE_AUTH, (user) => {
       setUser(user);
@@ -96,32 +91,15 @@ export default function Page() {
       });
   }
 
-  const toggleSwitch = () => {
-    setColorScheme((previousState) => !previousState);
-  };
-
-  // alert(user, 'got the user');
-
   return (
     <View style={styles.container} onLayout={onLayoutRootView}>
       <GestureHandlerRootView>
-        <AppProvider> 
-        {/* <View style={styles.toggleBox}>
-          <Switch
-            trackColor={{ false: "#767577", true: "#21D375" }}
-            thumbColor="#f5dd4b"
-            ios_backgroundColor="#3e3e3e"
-            onValueChange={toggleSwitch}
-            value={colorScheme}
-          />
-        </View> */}
         <ExpoStatusBar style="light" backgroundColor="#C0C5CE" />
         {user ? (
           <Dashboard user={user} userInfo={userInfo} />
         ) : (
-          <Loginform colorScheme={colorScheme} />
+          <Loginform />
         )}
-        </AppProvider>
       </GestureHandlerRootView>
     </View>
   );

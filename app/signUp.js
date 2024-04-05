@@ -12,11 +12,15 @@ import backsignup from "../assets/ricksaw.png";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { DB, FIREBASE_AUTH } from "../firebaseConfig";
 import { ref, set } from "firebase/database";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import {router} from 'expo-router';
+import ThemedButton from "../components/themeButton";
+import { AppContext } from "../context";
 
 
 export default function SignUp() {
+  const {colorScheme} = useContext(AppContext);
+
   const [userData, setUserData] = useState({
     name: "",
     email: "",
@@ -33,7 +37,6 @@ export default function SignUp() {
     confirmPassword: false
   });
   const [loading, setisLoading] = useState(false);
-  const colorScheme = useColorScheme();
 
   const handleChange = (fieldName, value) => {
     setUserData({ ...userData, [fieldName]: value });
@@ -76,8 +79,9 @@ export default function SignUp() {
   };
 
   return (
-    <View style={colorScheme == "light" ? styles.mainContainer: styles.darkContainer}>
+    <View style={colorScheme ? styles.mainContainer: styles.darkContainer}>
       <ImageBackground style={styles.signImg}>
+      <ThemedButton />
       {loading ? <ActivityIndicator size="large" color="#0000ff" /> :  
       <> 
         <Text style={styles.boldText}>Plan Your Ride!!</Text>
