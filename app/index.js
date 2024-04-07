@@ -1,4 +1,4 @@
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, View, Text, StatusBar } from "react-native";
 import { useEffect, useState, useRef, useCallback } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { FIREBASE_AUTH } from "../firebaseConfig";
@@ -108,6 +108,7 @@ export default function Page() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    marginTop: StatusBar.currentHeight
   },
   loaderTitle: {
     fontWeight: "bold",
@@ -127,12 +128,5 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     paddingTop: 20,
-  },
-  toggleBox: {
-    // position: 'absolute',
-    // top: 0,
-    // right: 20,
-    backgroundColor: '#C0C5CE',
-    paddingRight: 20
-  },
+  }
 });

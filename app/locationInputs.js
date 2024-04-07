@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
       elevation: 4,
       padding: 8,
       borderRadius: 8,
-      top: Constants.statusBarHeight,
+      top: Constants.statusBarHeight + 6,
       borderWidth: 0.5,
       gap: 6,
     },

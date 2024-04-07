@@ -1,17 +1,26 @@
-import { View, StyleSheet, TouchableOpacity, Image } from "react-native";
+import { View, StyleSheet, TouchableOpacity, Image, Text } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
-import { FontAwesome5 } from "@expo/vector-icons";
 import { logOut } from "../services/signout";
 import Riskhaw from "../assets/ricksaw.png";
+import { router } from "expo-router";
 
-export default function Header() {
+export default function Header(props) {
+  const { userInfo } = props;
+  var firstName = userInfo?.name.split(" ").slice(0, 1).join(" ");
+
+  const handleGoToProfile = () => {
+    router.push("/profile");
+  };
+
   return (
     <View style={styles.header}>
-      {/* <FontAwesome5 name="car-side" size={32} color="black" /> */}
       <Image source={Riskhaw} style={styles.rikshawiamge}></Image>
-      <TouchableOpacity onPress={logOut}>
-        <FontAwesome name="user-circle-o" size={32} color="black" />
-      </TouchableOpacity>
+      <View style={{ flexDirection: "row", alignItems: "center" }}>
+        <Text> Hello {firstName || ""}, </Text>
+        <TouchableOpacity onPress={handleGoToProfile}>
+          <FontAwesome name="user-circle-o" size={32} color="black" />
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -22,7 +31,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     marginLeft: 16,
     marginRight: 16,
-    // paddingBottom: 4
+    padding: 4
   },
   carDrive: {
     height: 50,
@@ -34,7 +43,7 @@ const styles = StyleSheet.create({
   },
 
   rikshawiamge: {
-    height:40,
+    height: 40,
     width: 50,
-  }
+  },
 });

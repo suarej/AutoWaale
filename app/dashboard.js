@@ -173,7 +173,7 @@ export default function Dashboard(props) {
   };
 
   return (
-    <>
+    <View>
       <Header userInfo={userInfo}/>
       {initialRegion && (
         <MapView
@@ -212,7 +212,7 @@ export default function Dashboard(props) {
           handleSearch={handleSearch}
         />
       )}
-    </>
+    </View>
   );
 }
 
