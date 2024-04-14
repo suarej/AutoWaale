@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     marginLeft: 16,
     marginRight: 16,
-    padding: 4
+    padding: 4,
   },
   carDrive: {
     height: 50,

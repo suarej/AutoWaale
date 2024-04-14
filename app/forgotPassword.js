@@ -1,6 +1,13 @@
-import { View, TextInput, Button, StyleSheet, Text, TouchableOpacity } from "react-native";
+import {
+  View,
+  TextInput,
+  Button,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+} from "react-native";
 import { useState } from "react";
-import { sendPasswordResetEmail } from "firebase/auth"; 
+import { sendPasswordResetEmail } from "firebase/auth";
 import { FIREBASE_AUTH } from "../firebaseConfig";
 
 export default function ForgotButton() {
@@ -27,9 +34,8 @@ export default function ForgotButton() {
       {message && <Text>{message}</Text>}
       {/* <Button title="Reset Password" onPress={handleResetPassword} /> */}
       <TouchableOpacity onPress={handleResetPassword} style={styles.button}>
-              <Text style={styles.textBold}>RESET PASSWORD</Text>
+        <Text style={styles.textBold}>RESET PASSWORD</Text>
       </TouchableOpacity>
-      
     </View>
   );
 }
@@ -38,7 +44,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
   },
   inputBox: {
     borderWidth: 1,
@@ -46,7 +52,7 @@ const styles = StyleSheet.create({
     padding: 10,
     marginBottom: 20,
     width: "80%",
-    borderRadius: 8
+    borderRadius: 8,
   },
   button: {
     borderRadius: 25,

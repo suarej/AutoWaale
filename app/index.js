@@ -1,6 +1,6 @@
 import { StyleSheet, View, Text, StatusBar } from "react-native";
-import { useEffect, useState, useRef, useCallback } from "react";
-import { onAuthStateChanged } from "firebase/auth";
+import { useEffect, useState, useRef, useCallback, useContext } from "react";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { FIREBASE_AUTH } from "../firebaseConfig";
 import Loginform from "./loginForm";
 import Dashboard from "./dashboard";
@@ -11,21 +11,34 @@ import * as Font from "expo-font";
 import { StatusBar as ExpoStatusBar } from "expo-status-bar";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { getDatabase, ref, child, get } from "firebase/database";
-
-// SplashScreen.preventAutoHideAsync();
+import { AppContext } from "../context";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Page() {
+  const {setUserInfo, userInfo, user, setUser, setUserSignedIn, isUserSignedIn} = useContext(AppContext);
   const [appIsReady, setAppIsReady] = useState(false);
-  const [user, setUser] = useState();
-  const [userInfo, setUserInfo] = useState();
   const animation = useRef(null);
-  
+
+  const checkAuth = async () => {
+    const userUid = await AsyncStorage.getItem('uid');
+    setUserSignedIn(userUid);
+    if(userUid) {
+      getCurrentUSer(userUid);
+    }
+  };
+
   useEffect(() => {
+    checkAuth();
+  }, []);
+
+  useEffect(()=> {
     onAuthStateChanged(FIREBASE_AUTH, (user) => {
+      const abc = AsyncStorage.getItem('uid');
+      setUserSignedIn(abc);
       setUser(user);
       user && getCurrentUSer(user?.uid);
     });
-  }, [user]);
+  }, [])
 
   // added timeout to replicate loading so that the loader is showing for 3 seconds
   useEffect(() => {
@@ -89,17 +102,13 @@ export default function Page() {
       .catch((error) => {
         console.error(error);
       });
-  }
+  };
 
   return (
     <View style={styles.container} onLayout={onLayoutRootView}>
       <GestureHandlerRootView>
         <ExpoStatusBar style="light" backgroundColor="#C0C5CE" />
-        {user ? (
-          <Dashboard user={user} userInfo={userInfo} />
-        ) : (
-          <Loginform />
-        )}
+        {isUserSignedIn ? <Dashboard user={user} userInfo={userInfo} /> : <Loginform />}
       </GestureHandlerRootView>
     </View>
   );
@@ -108,7 +117,7 @@ export default function Page() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: StatusBar.currentHeight
+    marginTop: StatusBar.currentHeight,
   },
   loaderTitle: {
     fontWeight: "bold",
@@ -128,5 +137,5 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     paddingTop: 20,
-  }
+  },
 });

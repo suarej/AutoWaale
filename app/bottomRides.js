@@ -12,30 +12,27 @@ export default function BotomRides(props) {
 
   return (
     // <View style={styles.container}>
-      <BottomSheet
-        ref={bottomSheetRef}
-        snapPoints={snapPoints}
-        index={1}
-        enablePanDownToClose={true}
-        // onChange={handleSheetChanges}
-      >
-        <View style={styles.container}>
+    <BottomSheet
+      ref={bottomSheetRef}
+      snapPoints={snapPoints}
+      index={1}
+      enablePanDownToClose={true}
+      // onChange={handleSheetChanges}
+    >
+      <View style={styles.container}>
         <Image source={Ricksaw} style={styles.imgAuto} />
         <View style={styles.textBox}>
           <View styles={{ justifyContent: "space-between" }}>
             <Text> Distance: {formattedDistance} Km</Text>
             <Text> Rikshwaw: ₹{formattedFare} </Text>
           </View>
-          <View>
-          </View>
+          <View></View>
         </View>
-        <TouchableOpacity
-          style={styles.searchButton}
-        >
+        <TouchableOpacity style={styles.searchButton}>
           <Text style={styles.buttonText}> CONFIRM RIDE </Text>
         </TouchableOpacity>
-        </View>
-      </BottomSheet>
+      </View>
+    </BottomSheet>
     // </View>
   );
 }
@@ -83,17 +80,17 @@ const styles = StyleSheet.create({
     // padding: 24,
     marginTop: 100,
     // backgroundColor: 'grey',
-    alignItems: 'center'
+    alignItems: "center",
   },
   contentContainer: {
     flex: 1,
-    alignItems: 'center',
-    backgroundColor: 'red'
+    alignItems: "center",
+    backgroundColor: "red",
   },
 });
 
-
-{/* <View style={styles.container}>
+{
+  /* <View style={styles.container}>
       <BottomSheet snapPoints={snapPoints}>
         <Image source={Ricksaw} style={styles.imgAuto} />
         <View style={styles.textBox}>
@@ -111,4 +108,5 @@ const styles = StyleSheet.create({
         </TouchableOpacity>
         <Text> abcdefgh</Text>
       </BottomSheet>
-    </View> */}
+    </View> */
+}

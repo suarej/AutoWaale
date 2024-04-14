@@ -17,7 +17,7 @@ import { useEffect } from "react";
 import { ref, child, push, update, set } from "firebase/database";
 import Header from "../components/header";
 // import { MaterialIcons } from "@expo/vector-icons";
-import { FontAwesome5 } from '@expo/vector-icons';
+import { FontAwesome5 } from "@expo/vector-icons";
 import { getDistance, convertDistance } from "geolib";
 import BotomRides from "./bottomRides";
 import LocationInputs from "./locationInputs";
@@ -174,7 +174,7 @@ export default function Dashboard(props) {
 
   return (
     <View>
-      <Header userInfo={userInfo}/>
+      <Header userInfo={userInfo} />
       {initialRegion && (
         <MapView
           ref={mapRef}
@@ -184,12 +184,12 @@ export default function Dashboard(props) {
         >
           {origin && (
             <Marker coordinate={origin}>
-            <FontAwesome5 name="car" size={24} color="red" />
+              <FontAwesome5 name="car" size={24} color="red" />
             </Marker>
           )}
           {destination && (
             <Marker coordinate={destination}>
-            <FontAwesome5 name="map-marker-alt" size={24} color="red" />
+              <FontAwesome5 name="map-marker-alt" size={24} color="red" />
             </Marker>
           )}
           {origin && destination && (
@@ -225,5 +225,5 @@ const styles = StyleSheet.create({
   fullMap: {
     width: Dimensions.get("window").width,
     height: Dimensions.get("window").height,
-  }
+  },
 });
