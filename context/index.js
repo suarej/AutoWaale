@@ -11,6 +11,8 @@ const AppProvider = ({ children }) => {
   const [user, setUser] = useState();
   const [isUserSignedIn, setUserSignedIn] = useState();
   const [fontSize, setFontSize] = useState(16);
+  const [home, setHome] = useState({});
+  const [work, setWork] = useState('');
 
   useEffect(() => {
     // Load font size from AsyncStorage on app start
@@ -55,6 +57,10 @@ const AppProvider = ({ children }) => {
         setUserSignedIn,
         fontSize,
         changeFontSize,
+        home,
+        setHome,
+        work,
+        setWork
       }}
     >
       {children}

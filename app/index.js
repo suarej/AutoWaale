@@ -95,6 +95,7 @@ export default function Page() {
       .then((snapshot) => {
         if (snapshot.exists()) {
           setUserInfo(snapshot.val());
+          console.log(userInfo, "info");
         } else {
           console.log("No data availabl");
         }
@@ -108,7 +109,7 @@ export default function Page() {
     <View style={styles.container} onLayout={onLayoutRootView}>
       <GestureHandlerRootView>
         <ExpoStatusBar style="light" backgroundColor="#C0C5CE" />
-        {isUserSignedIn ? <Dashboard user={user} userInfo={userInfo} /> : <Loginform />}
+        {isUserSignedIn ? <Dashboard /> : <Loginform />}
       </GestureHandlerRootView>
     </View>
   );
@@ -117,7 +118,7 @@ export default function Page() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: StatusBar.currentHeight,
+    marginTop: StatusBar.currentHeight
   },
   loaderTitle: {
     fontWeight: "bold",

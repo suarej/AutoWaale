@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "753647184663",
+    "firebase_url": "https://cab-sample-c8316-default-rtdb.firebaseio.com",
+    "project_id": "cab-sample-c8316",
+    "storage_bucket": "cab-sample-c8316.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:753647184663:android:252bba35fefefc8fd3a552",
+        "android_client_info": {
+          "package_name": "com.nisha.rikshaw.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "753647184663-1sjj9o1ho0dgl2p31i3nf5csosbrpqt8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.nisha.rikshaw.app",
+            "certificate_hash": "50b73fbc76aba11a4c4d6669928d25d02538afbb"
+          }
+        },
+        {
+          "client_id": "753647184663-7htkrt5kjcqps99vp128cm56h7595k9p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB3x1WEY0Cic4XuIxMt-ksbwoedZ5AUrOo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "753647184663-7htkrt5kjcqps99vp128cm56h7595k9p.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

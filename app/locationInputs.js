@@ -7,29 +7,51 @@ import {
   TouchableOpacity,
 } from "react-native";
 import Constants from "expo-constants";
+import { Ionicons } from "@expo/vector-icons";
+import { useContext } from "react";
+import { AppContext } from "../context";
+
+const HomeIcon = () => <Ionicons name="home" size={24} color="black" />;
+const WorkIcon = () => <Ionicons name="briefcase" size={24} color="black" />;
+
+navigator.geolocation = require("react-native-geolocation-service");
 
 export default function LocationInputs(props) {
   const { handleSetOrigin, handleSetDestination, handleSearch } = props;
+  const { home, work, userInfo } = useContext(AppContext);
   const key = "AIzaSyDs6dddB4WI6-2C2XIPIRY1Lqdc64BuwZk";
+
+  const onPressItem = (selectedItem) => {
+    // Do something with the selected item, such as saving it to state or navigating to a new screen
+    console.log("Selected item:", selectedItem);
+  };
 
   return (
     <View style={styles.searchContainer}>
       <Text style={styles.getRideBold}> GET A RIDE </Text>
       <GooglePlacesAutocomplete
+        currentLocation={true}
+        currentLocationLabel="Your location"
         placeholder={"Pickup location"}
-        fetchDetails={true} // to search lat long
+        fetchDetails={true}
         onPress={(data, details = null) => {
           handleSetOrigin(details);
         }}
         query={{
           key: key,
           language: "en",
+          components: "country:in",
         }}
         styles={{
           container: styles.mapTextContainer,
           textInput: styles.input,
           textInputContainer: styles.mapInputContainer,
         }}
+        // predefinedPlaces={
+        //   Object.keys(userInfo?.profileData?.home).length !== 0
+        //     ? [userInfo?.profileData?.home, userInfo?.profileData?.work]
+        //     : []
+        // }
       />
       <GooglePlacesAutocomplete
         styles={{
@@ -46,6 +68,23 @@ export default function LocationInputs(props) {
           key: key,
           language: "en",
         }}
+        // renderItem={(row) => (
+        //   <TouchableOpacity
+        //     style={styles.itemContainer}
+        //     onPress={() => onPressItem(row.item)}
+        //   >
+        //     <View style={styles.iconContainer}>
+        //       {row.item.description == "Home" && <HomeIcon />}
+        //       {row.item.description == "Work" && <WorkIcon />}
+        //     </View>
+        //     <Text style={styles.itemText}>{row.item.description}</Text>
+        //   </TouchableOpacity>
+        // )}
+        predefinedPlaces={
+          Object.keys(userInfo?.profileData?.home).length !== 0
+            ? [userInfo?.profileData?.home, userInfo?.profileData?.work]
+            : []
+        }
       />
       <TouchableOpacity style={styles.searchButton} onPress={handleSearch}>
         <Text style={styles.buttonText}> BOOK AUTO </Text>
@@ -55,6 +94,19 @@ export default function LocationInputs(props) {
 }
 
 const styles = StyleSheet.create({
+  itemContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    padding: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: "#ccc",
+  },
+  iconContainer: {
+    marginRight: 10,
+  },
+  itemText: {
+    fontSize: 16,
+  },
   mapTextContainer: {
     flex: 1,
     // width: "100%",

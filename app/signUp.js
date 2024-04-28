@@ -16,6 +16,7 @@ import ThemedButton from "../components/themeButton";
 import { AppContext } from "../context";
 import { Picker } from "@react-native-picker/picker";
 import FontSizePicker from "../components/fontSizePicker";
+import globalStyles from '../styles';
 
 export default function SignUp() {
   const { colorScheme } = useContext(AppContext);
@@ -127,7 +128,7 @@ export default function SignUp() {
   };
 
   return (
-    <View style={colorScheme ? styles.mainContainer : styles.darkContainer}>
+    <View style={[globalStyles.container, colorScheme ? globalStyles.lightTheme : globalStyles.darkTheme]}>
       <ImageBackground style={styles.signImg}>
         <ThemedButton />
         <FontSizePicker />
@@ -181,6 +182,8 @@ export default function SignUp() {
                 style={styles.phoneNumber}
                 placeholder="Mobile*"
                 keyboardType="phone-pad"
+                value={mobileNumber}
+                onChangeText={setMobileNumber}
               />
               {mobileNumberError ? (
                 <Text style={styles.error}>{mobileNumberError}</Text>
@@ -231,22 +234,6 @@ export default function SignUp() {
 }
 
 const styles = StyleSheet.create({
-  mainContainer: {
-    alignItems: "center",
-    // borderWidth: 0.5,
-    height: "100%",
-    justifyContent: "center",
-    gap: 7,
-    backgroundColor: "#C0C5CE",
-  },
-  darkContainer: {
-    backgroundColor: "#26282A",
-    alignItems: "center",
-    borderWidth: 0.5,
-    height: "100%",
-    justifyContent: "center",
-    gap: 7,
-  },
   signImg: {
     width: "100%",
     height: "100%",

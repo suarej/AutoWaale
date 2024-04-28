@@ -17,6 +17,7 @@ import ThemedButton from "../components/themeButton";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import FontSizePicker from "../components/fontSizePicker";
 import GoogleSignIn from "../components/googleSignIn";
+import globalStyles from '../styles';
 
 export default function Loginform(props) {
   const { colorScheme, setUser, user, fontSize } = useContext(AppContext);
@@ -46,9 +47,7 @@ export default function Loginform(props) {
   };
 
   return (
-    <View style={colorScheme ? styles.inputContainer : styles.darkContainer}>
-      <ThemedButton />
-      <FontSizePicker/>
+    <View style={[globalStyles.container, colorScheme ? globalStyles.lightTheme : globalStyles.darkTheme]}>
       <Image source={Rikshaw} style={styles.logo} />
       <TextInput
         value={email}
@@ -82,7 +81,7 @@ export default function Loginform(props) {
             <TouchableOpacity onPress={signUp} style={styles.button}>
               <Text style={[styles.textBold, {fontSize}]}>SIGN UP</Text>
             </TouchableOpacity>
-            <GoogleSignIn />
+            {/* <GoogleSignIn /> */}
           </View>
         </>
       )}
@@ -91,13 +90,6 @@ export default function Loginform(props) {
 }
 
 const styles = StyleSheet.create({
-  inputContainer: {
-    alignItems: "center",
-    height: "100%",
-    justifyContent: "center",
-    gap: 7,
-    backgroundColor: "#C0C5CE",
-  },
   logo: {
     width: 70,
     height: 70,
@@ -126,19 +118,11 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     backgroundColor: "#21D375",
     padding: 10,
-    paddingHorizontal: 40,
+    paddingHorizontal: 50,
   },
   textBold: {
     // fontSize: 15,
     fontWeight: "bold",
-  },
-  darkContainer: {
-    backgroundColor: "#26282A",
-    alignItems: "center",
-    borderWidth: 0.5,
-    height: "100%",
-    justifyContent: "center",
-    gap: 7,
   },
   forgotButton: {
     borderBottomWidth: 0.5,

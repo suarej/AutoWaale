@@ -4,80 +4,185 @@ import {
   StyleSheet,
   TouchableOpacity,
   Dimensions,
+  Image,
 } from "react-native";
 import { logOut } from "../services/signout";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
-import { useContext } from "react";
-import { FontAwesome } from '@expo/vector-icons';
+import { useContext, useEffect, useState } from "react";
+import { FontAwesome } from "@expo/vector-icons";
 import { AppContext } from "../context";
 const { width } = Dimensions.get("window");
-import { FIREBASE_AUTH } from "../firebaseConfig";
+import { DB, FIREBASE_AUTH } from "../firebaseConfig";
 import { router } from "expo-router";
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Ionicons } from "@expo/vector-icons";
+import { Feather } from "@expo/vector-icons";
+import UploadModal from "../components/uploadModal";
+import { Fontisto } from "@expo/vector-icons";
+import { SimpleLineIcons } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { Zocial } from "@expo/vector-icons";
+import { FontAwesome6 } from "@expo/vector-icons";
+import { ref, set } from "firebase/database";
+import globalStyles from "../styles";
 
 export default function Profile() {
-  const {userInfo, isUserSignedIn, setUserSignedIn} = useContext(AppContext);
+  const { userInfo, isUserSignedIn, setUserSignedIn, colorScheme } =
+    useContext(AppContext);
 
-  const logOut = async() => {
+  const [modalVisible, setModalVisible] = useState(false);
+  const [image, setImage] = useState(null);
+
+  useEffect(() => {
+    getImgSource();
+  }, []);
+
+  const openModal = () => {
+    setModalVisible(true);
+  };
+
+  const closeModal = () => {
+    setModalVisible(false);
+  };
+
+  const handleSettingPage = async () => {
+    router.push("/settingPage");
+  };
+
+  const handleEditpage = async () => {
+    router.push("/editPage");
+  };
+
+  const logOut = async () => {
     setUserSignedIn();
-    await AsyncStorage.removeItem('uid');
+    await AsyncStorage.removeItem("uid");
     FIREBASE_AUTH.signOut();
     router.push("/");
   };
-  
+
+  const setAndStoreImage = (imgUri, downloadURL, fileName) => {
+    setImage(imgUri);
+    // const newPostKey = push(child(ref(DB), "users")).key;
+    const userRef = ref(DB, "users/" + isUserSignedIn + "/profileData");
+
+    try {
+      set(userRef, {
+        profileImgUrl: downloadURL || "",
+        fileName: fileName || "",
+      });
+    } catch (error) {
+      console.log(error, "error");
+    }
+  };
+
+  const getImgSource = () => {
+    let imgUriFromDB = userInfo?.profileData?.profileImgUrl;
+    if (imgUriFromDB) {
+      setImage(imgUriFromDB);
+    } else {
+      setImage();
+    }
+  };
+
   return (
-    <>
-      <View style={styles.mainContainer}>
-        <FontAwesome5 name="user-edit" size={55} color="black" />
-        <TouchableOpacity style={{position: 'absolute', top: 20, right: 10}} onPress={logOut}>
-          <FontAwesome name="sign-out" size={32} color="black" style={{paddingLeft: 15}}/>
+    <View
+      style={[
+        globalStyles.container,
+        colorScheme ? globalStyles.lightTheme : globalStyles.darkTheme,
+      ]}
+    >
+      {modalVisible && (
+        <UploadModal
+          modalVisible={modalVisible}
+          closeModal={closeModal}
+          setImage={setAndStoreImage}
+        />
+      )}
+      <View style={styles.topContainer}>
+        <Ionicons
+          name="settings"
+          size={40}
+          color="black"
+          onPress={handleSettingPage}
+        />
+        <TouchableOpacity onPress={logOut}>
+          <FontAwesome
+            name="sign-out"
+            size={32}
+            color="black"
+            style={{ paddingLeft: 15 }}
+          />
           <Text> LogOut </Text>
         </TouchableOpacity>
-        
-        <Text style={styles.basicInfo}> Profile Info </Text>
-        <View style={styles.container}>
-          <View style={styles.basicInfoContainer}>
-            <View style={[styles.underlineDetails, { width: width * 0.8 }]}>
-              <Text style={styles.titleName}> Name:</Text>
-              <Text style={styles.details}>{userInfo.name}</Text>
-              <AntDesign
-                name="edit"
-                size={24}
+      </View>
+      <View style={styles.mainContainer}>
+        <TouchableOpacity onPress={openModal}>
+          {image ? (
+            <Image
+              source={{ uri: image }}
+              style={styles.image}
+              onError={(error) => console.error("Image loading error:", error)}
+            />
+          ) : (
+            <Ionicons name="person-circle" size={114} color="black" />
+          )}
+
+          <TouchableOpacity style={styles.editButton}>
+            {!image && (
+              <Feather
+                name="camera"
+                size={22}
                 color="black"
-                style={{ position: "absolute", right: 20, top: 30 }}
+                style={{ top: -32, left: 90 }}
               />
-            </View>
-            <View style={[styles.underlineDetails, { width: width * 0.8 }]}>
-              <Text style={styles.titleName}> Phone :</Text>
-              <Text style={styles.details}> {userInfo.mobile}</Text>
-              <AntDesign
-                name="edit"
-                size={24}
-                color="black"
-                style={{ position: "absolute", right: 20, top: 30 }}
-              />
-            </View>
-            <View style={[styles.underlineDetails, { width: width * 0.8 }]}>
-              <Text style={styles.titleName}> Email:</Text>
-              <Text style={styles.details}> {userInfo.email}</Text>
-              <AntDesign
-                name="edit"
-                size={24}
-                color="black"
-                style={{ position: "absolute", right: 20, top: 30 }}
-              />
-            </View>
+            )}
+          </TouchableOpacity>
+        </TouchableOpacity>
+
+        <View style={styles.basicInfo}>
+          <Text> Personal Information </Text>
+          <FontAwesome
+            name="edit"
+            size={24}
+            color="black"
+            onPress={handleEditpage}
+          />
+        </View>
+
+        <View style={styles.infoContainer}>
+          <View style={styles.infoItems}>
+            <FontAwesome6 name="user-large" size={24} color="#21D375" />
+            <Text style={styles.details}>{userInfo?.name}</Text>
+          </View>
+          <View style={styles.infoItems}>
+            <MaterialCommunityIcons name="phone" size={24} color="#21D375" />
+            <Text style={styles.details}> {userInfo?.mobile}</Text>
+          </View>
+          <View style={styles.infoItems}>
+            <Zocial name="email" size={24} color="#21D375" />
+            <Text style={styles.details}> {userInfo?.email} </Text>
           </View>
         </View>
       </View>
-    </>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    borderRadius: 5,
+  infoContainer: {
+    borderWidth: 0.2,
+    gap: 14,
+    padding: 20,
+    margin: 20
+  },
+  infoItems: {
+    flexDirection: 'row',
+    // justifyContent: 'flex-start',
+    alignItems: 'center',
+    gap: 14,
+    paddingHorizontal: 12
+
   },
   mainContainer: {
     flex: 1,
@@ -87,24 +192,30 @@ const styles = StyleSheet.create({
   },
   basicInfo: {
     color: "black",
-    fontWeight: "bold",
-    fontSize: 22,
-    marginBottom: 40,
-    marginTop: 10
+    // fontWeight: "bold",
+    fontSize: 12,
+    justifyContent: "flex-start",
+    flexDirection: "row",
+    gap: 150,
   },
   titleName: {
-    fontWeight: "bold",
+    // fontWeight: "bold",
     fontSize: 15,
+    left: 20,
+    top: 20,
   },
   details: {
-    fontSize: 18,
-    borderBottomWidth: 0.8,
-    borderBottomColor: "#777B7E",
   },
-  underlineDetails: {
-    paddingVertical: 12,
+  image: {
+    width: 150,
+    height: 150,
+    borderRadius: 75,
   },
-  basicInfoContainer: {
-    // marginBottom: 60,
+  topContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
+    marginTop: 35,
+    padding: 22,
   },
 });

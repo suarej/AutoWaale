@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 import Constants from "expo-constants";
-import { useState, useRef } from "react";
+import { useState, useRef, useContext } from "react";
 import MapViewDirections from "react-native-maps-directions";
 import { DB } from "../firebaseConfig";
 import * as Location from "expo-location";
@@ -21,15 +21,10 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import { getDistance, convertDistance } from "geolib";
 import BotomRides from "./bottomRides";
 import LocationInputs from "./locationInputs";
+import { AppContext } from "../context";
 
-const { width, height } = Dimensions.get("window");
-
-const ASPECT_RATIO = width / height;
-const LATITUDE_DELTA = 0.2;
-const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
-
-export default function Dashboard(props) {
-  const { user, userInfo } = props;
+export default function Dashboard() {
+  const { user, userInfo } = useContext(AppContext);
   // const apiKey = process.env.EXPO_GOOGLE_MAPS_API_KEY;
   const key = "AIzaSyDs6dddB4WI6-2C2XIPIRY1Lqdc64BuwZk";
 
@@ -72,10 +67,7 @@ export default function Dashboard(props) {
   }, []);
 
   const handleSetOrigin = (details) => {
-    // let x = GetCurrentLocation()
     setOrigin({
-      // latitude : x.latitute,
-      // longitude :  x.longitude
       latitude: details?.geometry.location.lat,
       longitude: details?.geometry.location.lng,
     });
@@ -174,7 +166,7 @@ export default function Dashboard(props) {
 
   return (
     <View>
-      <Header userInfo={userInfo} />
+      <Header/>
       {initialRegion && (
         <MapView
           ref={mapRef}

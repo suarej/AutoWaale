@@ -1,6 +1,7 @@
 import { initializeApp } from 'firebase/app';
 import {getAuth} from "firebase/auth";
 import { getDatabase } from "firebase/database";
+import { getStorage } from 'firebase/storage';
 
 // Initialize Firebase
 const firebaseConfig = {
@@ -11,12 +12,13 @@ const firebaseConfig = {
   storageBucket: "cab-sample-c8316.appspot.com",
   messagingSenderId: "753647184663",
   appId: "1:753647184663:web:b3c12746a20b878ed3a552",
-  databaseURL: "https://cab-sample-c8316-default-rtdb.firebaseio.com/",
+  storageBucket: "gs://cab-sample-c8316.appspot.com"
 };
 
 export const FIREBASE_APP = initializeApp(firebaseConfig);
 export const FIREBASE_AUTH = getAuth(FIREBASE_APP);
 export const DB = getDatabase(FIREBASE_APP);
+export const FIREBASE_STORAGE= getStorage(FIREBASE_APP);
 
 // For more information on how to access Firebase in your project,
 // see the Firebase documentation: https://firebase.google.com/docs/web/setup#access-firebase
