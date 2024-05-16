@@ -95,7 +95,6 @@ export default function Page() {
       .then((snapshot) => {
         if (snapshot.exists()) {
           setUserInfo(snapshot.val());
-          console.log(userInfo, "info");
         } else {
           console.log("No data availabl");
         }

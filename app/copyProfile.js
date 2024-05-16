@@ -12,18 +12,26 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { Feather } from "@expo/vector-icons";
 import { ref, set } from "firebase/database";
-import { DB } from "../firebaseConfig";
+import { DB, FIREBASE_AUTH } from "../firebaseConfig";
 import UploadModal from "../components/uploadModal";
 import blankP from '../assets/blank_p.png';
-import { logOut } from "../services/signout";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { AntDesign } from '@expo/vector-icons';
 
 export default function Profile() {
-  const { colorScheme, userInfo, isUserSignedIn } = useContext(AppContext);
+  const { colorScheme, userInfo, isUserSignedIn, setUserSignedIn } = useContext(AppContext);
   const [modalVisible, setModalVisible] = useState(false);
   const [image, setImage] = useState(null);
 
   const handleRouteChange = (routeName) => {
     router.push(`profileDetails/${routeName}`);
+  };
+
+  const logOut = async () => {
+    setUserSignedIn();
+    await AsyncStorage.removeItem("uid");
+    FIREBASE_AUTH.signOut();
+    router.push("/");
   };
 
   const openModal = () => {
@@ -113,6 +121,21 @@ export default function Profile() {
         />
           <View style={styles.innerItem}>
             <Text style={styles.details}>Settings</Text>
+            <MaterialIcons
+              name="keyboard-arrow-right"
+              size={24}
+              color="black"
+            />
+          </View>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          onPress={() => handleRouteChange("safetyPage")}
+          style={styles.infoItems}
+        >
+        <AntDesign name="Safety" size={24} color="black" />
+          <View style={styles.innerItem}>
+            <Text style={styles.details}>Safety CheckUp !</Text>
             <MaterialIcons
               name="keyboard-arrow-right"
               size={24}

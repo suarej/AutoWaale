@@ -15,7 +15,6 @@ import { AppContext } from "../context";
 const { width } = Dimensions.get("window");
 import { DB, FIREBASE_AUTH } from "../firebaseConfig";
 import { router } from "expo-router";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import UploadModal from "../components/uploadModal";
@@ -52,13 +51,6 @@ export default function Profile() {
 
   const handleEditpage = async () => {
     router.push("/editPage");
-  };
-
-  const logOut = async () => {
-    setUserSignedIn();
-    await AsyncStorage.removeItem("uid");
-    FIREBASE_AUTH.signOut();
-    router.push("/");
   };
 
   const setAndStoreImage = (imgUri, downloadURL, fileName) => {
@@ -99,23 +91,7 @@ export default function Profile() {
           setImage={setAndStoreImage}
         />
       )}
-      <View style={styles.topContainer}>
-        <Ionicons
-          name="settings"
-          size={40}
-          color="black"
-          onPress={handleSettingPage}
-        />
-        <TouchableOpacity onPress={logOut}>
-          <FontAwesome
-            name="sign-out"
-            size={32}
-            color="black"
-            style={{ paddingLeft: 15 }}
-          />
-          <Text> LogOut </Text>
-        </TouchableOpacity>
-      </View>
+      
       <View style={styles.mainContainer}>
         <TouchableOpacity onPress={openModal}>
           {image ? (
