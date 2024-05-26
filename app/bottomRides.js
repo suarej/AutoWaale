@@ -6,7 +6,7 @@ import EvAuto from "../assets/evAuto.png";
 import { Octicons } from "@expo/vector-icons";
 
 export default function BotomRides(props) {
-  const {handleSearch, setShow} = props;
+  const {handleSearch, setShow, setSelectedVehicle} = props;
   const snapPoints = useMemo(() => ["25%", "43%"], []);
   const bottomSheetRef = useRef(null);
   const { distance } = props;
@@ -21,6 +21,7 @@ export default function BotomRides(props) {
 
   const handleSelectItem = (item) => {
     setSelectedItem(item);
+    setSelectedVehicle(item);
   };
 
   return (
@@ -60,7 +61,7 @@ export default function BotomRides(props) {
             <Text style={styles.textBold}> ₹{formattedFareCargo} </Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.button} onPress={()=> {setShow(''); handleSearch();}}> 
-        <Text style={styles.textBold}>      CONFIRM RIDE</Text>
+        <Text style={styles.textChoose}> Choose {selectedItem}</Text>
       </TouchableOpacity>
     </BottomSheet>
   );
@@ -98,6 +99,12 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     fontSize: 15,
     paddingLeft: 15
+  },
+  textChoose: {
+    fontWeight: '500',
+    fontSize: 16,
+    textTransform: 'capitalize',
+    textAlign: 'center'
   },
   textBoldStrike: {
     fontWeight: '400',

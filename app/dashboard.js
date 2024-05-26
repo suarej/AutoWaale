@@ -8,6 +8,7 @@ import {
   Button,
   Alert,
   StatusBar,
+  ActivityIndicator,
 } from "react-native";
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 import Constants from "expo-constants";
@@ -25,10 +26,12 @@ import BotomRides from "./bottomRides";
 import LocationInputs from "./locationInputs";
 import { AppContext } from "../context";
 import AddDestinations from "../components/addDestinations";
+import Loader from "../components/loader";
+import {router} from 'expo-router';
+import BookedRide from "./bookedRide";
 
 export default function Dashboard() {
   const { user, userInfo } = useContext(AppContext);
-  // const apiKey = process.env.EXPO_GOOGLE_MAPS_API_KEY;
   const key = "AIzaSyDs6dddB4WI6-2C2XIPIRY1Lqdc64BuwZk";
 
   const [origin, setOrigin] = useState("");
@@ -41,6 +44,22 @@ export default function Dashboard() {
   const [placeName, setPlaceName] = useState(null);
   const [destinations, setDestinations] = useState([]);
   const [show, setShow] = useState('single');
+  const [isLoading, setIsLoading] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [message, setMessage] = useState('');
+  const [selectedVehicle, setSelectedVehicle] = useState('auto');
+
+  const handleAddOrigin = (details) => {
+    destinations[0] = 
+      {
+        latitude: details?.geometry.location.lat,
+        longitude: details?.geometry.location.lng,
+        name: details?.name,
+        key: details?.place_id,
+      };
+
+      setDestinations([...destinations]);
+  };
 
   const addDestination = async (details, data) => {
     if (destinations.length < 4) {
@@ -66,7 +85,7 @@ export default function Dashboard() {
   };
 
   const clearDestinations = () => {
-    setDestinations([]);
+    setDestinations(destinations.slice(0, 1));
   };
 
   useEffect(() => {
@@ -89,6 +108,7 @@ export default function Dashboard() {
       } else {
         setPlaceName("Unknown");
       }
+      
       setDestinations([
         ...destinations,
         {
@@ -170,6 +190,16 @@ export default function Dashboard() {
       camera.zoom = 17.5;
       mapRef.current?.animateCamera(camera, { duration: 2500 });
     }
+
+    setIsLoading(true);
+    setShow('loader');
+    setMessage('Hold on, we are finding nearest ride...');
+    setTimeout(()=> {
+        setMessage('Driver assigned');
+        setShow('bookedRide')
+        // router.push('/bookedRide');
+        setIsLoading(false);
+    }, 3000)
   };
 
   const calculateDistance = () => {
@@ -184,8 +214,11 @@ export default function Dashboard() {
 
   return (
     <View>
-      {/* <Header /> */}
-      {initialRegion && (
+    {!initialRegion ? (
+      <View style={{position: 'absolute', top: 350, left: 160}}> 
+        <ActivityIndicator size="large" color="#0000ff" /> 
+        </View>
+      ) : (
         <MapView
           ref={mapRef}
           style={styles.fullMap}
@@ -213,12 +246,13 @@ export default function Dashboard() {
           )}
         </MapView>
       )}
-      { distance && (
-        <BotomRides distance={distance} handleSearch={handleSearch} setShow={setShow}/>
+      { distance && show!== 'loader' && (
+        <BotomRides distance={distance} handleSearch={handleSearch} setShow={setShow} setSelectedVehicle={setSelectedVehicle} selectedVehicle={selectedVehicle}/>
       )}
       {
         show === 'single' ? 
         <LocationInputs
+        handleAddOrigin={handleAddOrigin}
             handleSetDestination={addDestination}
             setShow={setShow}
             placeName={placeName}
@@ -230,6 +264,16 @@ export default function Dashboard() {
           handleSetDestination={addDestination}
           setShow={setShow}
         /> : null
+      }
+      {
+        show == 'loader' && <Loader isLoading={isLoading} progress={progress} message={message}/>
+      }
+      {
+        show == 'bookedRide' && <BookedRide setShow={setShow} selectedVehicle={selectedVehicle}
+              setDistance={setDistance}
+              clearDestinations={clearDestinations}
+              destinations={destinations}
+        />
       }
     </View>
   );
@@ -261,3 +305,4 @@ const styles = StyleSheet.create({
     gap: 6,
   },
 });
+

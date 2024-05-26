@@ -21,7 +21,7 @@ const WorkIcon = () => <Ionicons name="briefcase" size={24} color="black" />;
 // navigator.geolocation = require("react-native-geolocation-service");
 
 export default function LocationInputs(props) {
-  const { handleSetDestination, setShow, placeName, calculateDistance } = props;
+  const { handleSetDestination, setShow, placeName, calculateDistance, handleAddOrigin } = props;
   const { home, work, userInfo } = useContext(AppContext);
   const [modalSwitch, setModalSwitch] = useState(false);
   const [modalScheduler, setModalScheduler] = useState(false);
@@ -81,14 +81,12 @@ export default function LocationInputs(props) {
             <AntDesign name="clockcircleo" size={16} color="black" />
             {pickUptime?.length ? (
               <Text style={{ fontSize: 13, fontWeight: 600 }}>
-                {" "}
                 {pickUptime[0]} -{"\u2192"}
                 {pickUptime[1]}{" "}
               </Text>
             ) : (
               <Text style={{ fontSize: 13, fontWeight: 600 }}>
-                {" "}
-                Pickup Time{" "}
+                Pickup Time
               </Text>
             )}
             <AntDesign name="caretdown" size={11} color="black" />
@@ -100,8 +98,7 @@ export default function LocationInputs(props) {
             >
               <Feather name="user" size={16} color="black" />
               <Text style={{ fontSize: 13, fontWeight: 600 }}>
-                {" "}
-                for {rider}{" "}
+                for {rider}
               </Text>
               <AntDesign name="caretdown" size={11} color="black" />
             </TouchableOpacity>
@@ -118,7 +115,7 @@ export default function LocationInputs(props) {
           <GooglePlacesAutocomplete
             placeholder={placeName}
             onPress={(data, details = null) => {
-              handleSetDestination(details, data);
+              handleAddOrigin(details, data);
             }}
             query={{
               key: key,

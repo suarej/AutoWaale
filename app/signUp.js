@@ -12,10 +12,8 @@ import { DB, FIREBASE_AUTH } from "../firebaseConfig";
 import { ref, set } from "firebase/database";
 import { useContext, useRef, useState } from "react";
 import { router } from "expo-router";
-import ThemedButton from "../components/themeButton";
 import { AppContext } from "../context";
 import { Picker } from "@react-native-picker/picker";
-import FontSizePicker from "../components/fontSizePicker";
 import globalStyles from '../styles';
 
 export default function SignUp() {
@@ -130,8 +128,6 @@ export default function SignUp() {
   return (
     <View style={[globalStyles.container, colorScheme ? globalStyles.lightTheme : globalStyles.darkTheme]}>
       <ImageBackground style={styles.signImg}>
-        <ThemedButton />
-        <FontSizePicker />
         {loading ? (
           <ActivityIndicator size="large" color="#0000ff" />
         ) : (
@@ -158,7 +154,7 @@ export default function SignUp() {
                 <Text style={styles.error}>{emailError}</Text>
               ) : null}
             </View>
-            <View style={styles.inputWrapper}>
+            <View style={styles.pickerWrapper}>
               <Picker
                 selectedValue={selectedValue}
                 style={styles.dropdown}
@@ -166,10 +162,10 @@ export default function SignUp() {
                   setSelectedValue(itemValue)
                 }
               >
-                <Picker.Item label="City" value="" />
-                <Picker.Item label="Pune" value="option1" style={{fontSize: 12}}/>
-                <Picker.Item label="Mumbai" value="option2" />
-                <Picker.Item label="Nagpur" value="option3" />
+                <Picker.Item label="City" value="" style={{fontSize: 12}}/>
+                <Picker.Item label="Pune" value="option1" style={{fontSize: 13}}/>
+                <Picker.Item label="Mumbai" value="option2" style={{fontSize: 13}}/>
+                <Picker.Item label="Nagpur" value="option3" style={{fontSize: 13}}/>
               </Picker>
             </View>
             <View style={styles.inputWrapperMobile}>
@@ -269,9 +265,10 @@ const styles = StyleSheet.create({
   },
   inputText: {
     backgroundColor: "#e1e1e1",
-    padding: 7,
+    padding: 10,
+    paddingHorizontal: 12,
     // width: "70%",
-    fontSize: 12,
+    fontSize: 13,
     borderRadius: 8,
   },
   inputTextMobile: {
@@ -316,7 +313,8 @@ const styles = StyleSheet.create({
   },
   dropdown: {
     backgroundColor: "#e1e1e1",
-    borderRadius: 5
+    borderRadius: 8,
+    overflow: 'hidden'
   },
   countryCode: {
     // flex: 1,
@@ -337,4 +335,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 5,
   },
+  pickerWrapper: {
+    width: '65%',
+    borderRadius: 8,
+    overflow: 'hidden'
+  }
 });

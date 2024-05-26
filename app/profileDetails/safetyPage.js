@@ -2,8 +2,16 @@ import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { Feather } from "@expo/vector-icons";
+import { useState } from "react";
+import EmergencyModal from "../../components/emergencyModal";
 
 export default function SafetyPage() {
+  const [emergencyModal, setemergencyModal] = useState(false);
+
+  const closeEmergencyModal = () => {
+    setemergencyModal(false);
+  };
+
   return (
     <View>
       <View>
@@ -77,30 +85,52 @@ export default function SafetyPage() {
         >
           Trusted contacts
         </Text>
-        <View
-          
-        >
+        {emergencyModal == true && (
+          <EmergencyModal closeEmergencyModal={closeEmergencyModal} />
+        )}
+        <View>
           <TouchableOpacity
             onPress={() => router.push("/profileDetails/trustedPage")}
             style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            marginRight: 30,
-          }}
-          >
-          <Text
-            style={{
-              fontSize: 15,
-              marginLeft: 19,
-              marginTop: 8,
-              borderBottomWidth: 0.2,
-              paddingBottom: 20,
+              flexDirection: "row",
+              justifyContent: "space-between",
+              marginRight: 30,
             }}
           >
-            Choose friends or family so you can quickly share your location,
-            trip status and other details
-          </Text>
-          <AntDesign name="right" size={18} color="black" />
+            <Text
+              style={{
+                fontSize: 15,
+                marginLeft: 19,
+                marginTop: 8,
+                borderBottomWidth: 0.2,
+                paddingBottom: 20,
+              }}
+            >
+              Choose friends or family so you can quickly share your location,
+              trip status and other details
+            </Text>
+            <AntDesign name="right" size={18} color="black" />
+          </TouchableOpacity>
+          <TouchableOpacity style={{}} onPress={() => setemergencyModal(true)}>
+            <Text
+              style={{ fontWeight: "700", fontSize: 16, padding:18 }}
+            >
+              Emergency Services
+            </Text>
+            <View style={{flexDirection:"row",width:"auto"}}>
+            <Text
+              style={{
+                fontSize: 15,
+                marginLeft: 19,
+                borderBottomWidth: 0.2,
+                paddingBottom: 20,
+                paddingRight:75
+              }}
+            >
+              Contact Emergency Services like Police,Ambulance.etc
+            </Text>
+            <AntDesign name="right" size={18} color="black" />
+            </View>
           </TouchableOpacity>
         </View>
       </View>

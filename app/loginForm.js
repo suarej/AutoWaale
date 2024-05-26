@@ -35,6 +35,9 @@ export default function Loginform(props) {
     try {
       const response = await signInWithEmailAndPassword(auth, email, password);
       await AsyncStorage.setItem('uid', response.user.uid);
+      if(response.user) {
+        router.push('/');
+      }
     } catch (error) {
       alert("Sign in failed: " + error.message);
     } finally {

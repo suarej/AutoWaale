@@ -2,7 +2,7 @@ import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import globalStyles from "../styles";
 import { MaterialIcons } from "@expo/vector-icons";
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { AppContext } from "../context";
 import { Fontisto } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
@@ -23,6 +23,10 @@ export default function Profile() {
   const [modalVisible, setModalVisible] = useState(false);
   const [image, setImage] = useState(null);
 
+  useEffect(() => {
+    getImgSource();
+  }, []);
+
   const handleRouteChange = (routeName) => {
     router.push(`profileDetails/${routeName}`);
   };
@@ -39,6 +43,15 @@ export default function Profile() {
   };
   const closeModal = () => {
     setModalVisible(false);
+  };
+
+  const getImgSource = () => {
+    let imgUriFromDB = userInfo?.profileData?.profileImgUrl;
+    if (imgUriFromDB) {
+      setImage(imgUriFromDB);
+    } else {
+      setImage();
+    }
   };
 
   const setAndStoreImage = (imgUri, downloadURL, fileName) => {
@@ -107,6 +120,17 @@ export default function Profile() {
           </TouchableOpacity>
         </View>
       </View>
+      <TouchableOpacity 
+      onPress={() => router.push("/promotions")}
+      style={{borderWidth:0.2,borderRadius:5,padding:15}}>
+        <Text style={{fontWeight:"500",fontSize:18}}>
+          You have multiple promos
+        </Text>
+        <View style={{flexDirection:"row"}}>
+        <Text style={{width:250}}>we'll automatically apply the one  that saves you</Text>
+        <Ionicons name="pricetag" size={40} color="#21D375" />
+        </View>
+      </TouchableOpacity>
 
       <View>
         <Text style={styles.title}> App Settings </Text>
@@ -159,7 +183,7 @@ export default function Profile() {
           </View>
         </TouchableOpacity>
 
-        <TouchableOpacity
+        {/* <TouchableOpacity
           onPress={() => handleRouteChange("pastRides")}
           style={styles.infoItems}
         >
@@ -173,7 +197,7 @@ export default function Profile() {
             />
           </View>
           <View />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
         <TouchableOpacity
           onPress={() => handleRouteChange("wallet")}
@@ -229,7 +253,7 @@ export default function Profile() {
           name="sign-out"
           size={32}
           color="green"
-          style={{ paddingLeft: 15, bottom: -55 }}
+          style={{ paddingLeft: 15, bottom: 0 }}
         />
         <Text> LogOut </Text>
       </TouchableOpacity>

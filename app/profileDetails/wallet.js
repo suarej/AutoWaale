@@ -12,8 +12,25 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import PhonePay from "../../assets/phonepay.png";
 import Gpay from '../../assets/gpay.png';
+import { Entypo } from '@expo/vector-icons';
+import { useState } from "react";
+import VoucherModal from "../../components/voucherModal";
+
 
 export default function Wallet() {
+  const [voucherModal, setvoucherModal] = useState(false);
+  const [voucherMoney, setVoucherMoney] = useState(0);
+
+  const closeVoucherModal = () => {
+    setvoucherModal(false);
+  };
+
+  const addMoney = (newValue) => {
+    setVoucherMoney(prevValue => prevValue + newValue);
+};
+
+  console.log(voucherMoney, "money");
+
   return (
     <View style={{ marginTop: 30 }}>
       <Text
@@ -31,13 +48,24 @@ export default function Wallet() {
         <View style={styles.giftCard}>
           <Text style={styles.title}>Autowale Cash</Text>
           <View style={styles.giftDetails}>
-            <Text style={{ fontWeight: "bold", fontSize: 30 }}> $0.00 </Text>
+            <Text style={{ fontWeight: "bold", fontSize: 30 }}> &#8377; {voucherMoney} </Text>
             <MaterialIcons
               name="keyboard-arrow-right"
               size={24}
               color="black"
             />
           </View>
+          {
+            voucherModal ==true && <VoucherModal voucherMoney={voucherMoney} addMoney={addMoney} closeVoucherModal={closeVoucherModal}/>
+          }
+
+          <TouchableOpacity onPress={()=>setvoucherModal(true)} style={styles.button}>
+          
+          <Entypo name="plus" size={18} color="black" />
+            <Text style={styles.textBold}>
+              Add Voucher
+          </Text>
+          </TouchableOpacity>
         </View>
 
         <View style={styles.giftDescription}>
@@ -104,7 +132,8 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     // Android elevation
     elevation: 5,
-    padding: 30,
+    paddingHorizontal: 30,
+    padding: 20,
     // backgroundColor: "grey"
   },
   giftDetails: {
@@ -145,5 +174,21 @@ const styles = StyleSheet.create({
   },
   payTitle: {
     fontSize: 16
+  },
+  textBold: {
+    fontWeight: "600",
+    // textAlign: "center",
+    fontSize: 16,
+  },
+  button: {
+    backgroundColor: "#21D375",
+    width: 150,
+    padding: 10,
+    borderRadius: 50,
+    marginTop: 10,
+    flexDirection: 'row',
+    // textAlign: 'center'
+    justifyContent: 'center',
+    alignItems: 'center'
   }
 });
