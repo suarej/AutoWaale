@@ -1,25 +1,24 @@
 import { initializeApp } from 'firebase/app';
 import {getAuth} from "firebase/auth";
-
-// Optionally import the services that you want to use
-// import {...} from "firebase/database";
-import {getFirestore} from "firebase/firestore";
-// import {...} from "firebase/functions";
-// import {...} from "firebase/storage";
+import { getDatabase } from "firebase/database";
+import { getStorage } from 'firebase/storage';
 
 // Initialize Firebase
 const firebaseConfig = {
-  apiKey: "AIzaSyDzsiNIu0Remgfu1DCupo-Ez5NErkfAx3k",
-  authDomain: "cab-sample-8c0f5.firebaseapp.com",
-  projectId: "cab-sample-8c0f5",
-  storageBucket: "cab-sample-8c0f5.appspot.com",
-  messagingSenderId: "648358416583",
-  appId: "1:648358416583:web:cf2fbf45fe7345f285aee2"
+  apiKey: "AIzaSyCmgTo8HpCAbGKk7rTTpj885G2dgHR-Pv0",
+  authDomain: "cab-sample-c8316.firebaseapp.com",
+  databaseURL: "https://cab-sample-c8316-default-rtdb.firebaseio.com",
+  projectId: "cab-sample-c8316",
+  storageBucket: "cab-sample-c8316.appspot.com",
+  messagingSenderId: "753647184663",
+  appId: "1:753647184663:web:b3c12746a20b878ed3a552",
+  storageBucket: "gs://cab-sample-c8316.appspot.com"
 };
 
 export const FIREBASE_APP = initializeApp(firebaseConfig);
 export const FIREBASE_AUTH = getAuth(FIREBASE_APP);
-export const DB = getFirestore(FIREBASE_APP);
+export const DB = getDatabase(FIREBASE_APP);
+export const FIREBASE_STORAGE= getStorage(FIREBASE_APP);
 
 // For more information on how to access Firebase in your project,
 // see the Firebase documentation: https://firebase.google.com/docs/web/setup#access-firebase
