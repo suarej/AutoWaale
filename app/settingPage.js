@@ -38,7 +38,7 @@ export default function SettingPage() {
       <TouchableOpacity style={styles.infoItems} onPress={()=>{openModal(), setPageTitle("Set Home")}}>
         <Ionicons name="home" size={24} color="black" />
         <View style={styles.innerItem}>
-          <Text style={styles.details}>Home </Text>
+          <Text style={styles.details}>Home</Text>
           <MaterialIcons name="keyboard-arrow-right" size={24} color="black" />
         </View>
       </TouchableOpacity>

@@ -121,6 +121,9 @@ export default function LocationInputs(props) {
               key: key,
               language: "en",
               components: "country:in",
+              location: '18.5204, 73.8567', // latitude and longitude of Pune
+              radius: '25000', //15 km
+              strictbounds: true,
             }}
             fetchDetails={true}
             styles={{
@@ -145,6 +148,9 @@ export default function LocationInputs(props) {
               key: key,
               language: "en",
               components: "country:in",
+              location: '18.5204, 73.8567', // latitude and longitude of Pune
+              radius: '25000', //15 km
+              strictbounds: true,
             }}
             fetchDetails={true}
             styles={{

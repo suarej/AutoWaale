@@ -17,6 +17,7 @@ import UploadModal from "../components/uploadModal";
 import blankP from '../assets/blank_p.png';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AntDesign } from '@expo/vector-icons';
+// import { MaterialIcons } from '@expo/vector-icons';
 
 export default function Profile() {
   const { colorScheme, userInfo, isUserSignedIn, setUserSignedIn } = useContext(AppContext);
@@ -183,7 +184,7 @@ export default function Profile() {
           </View>
         </TouchableOpacity>
 
-        {/* <TouchableOpacity
+        <TouchableOpacity
           onPress={() => handleRouteChange("pastRides")}
           style={styles.infoItems}
         >
@@ -197,7 +198,7 @@ export default function Profile() {
             />
           </View>
           <View />
-        </TouchableOpacity> */}
+        </TouchableOpacity>
 
         <TouchableOpacity
           onPress={() => handleRouteChange("wallet")}
@@ -247,6 +248,22 @@ export default function Profile() {
             />
           </View>
         </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => handleRouteChange("notification")}
+          style={styles.infoItems}
+        >
+          <MaterialIcons name="notifications" size={24} color="black" />
+          <View style={styles.innerItem}>
+            <Text style={styles.details}>Notification</Text>
+            <MaterialIcons
+              name="keyboard-arrow-right"
+              size={24}
+              color="black"
+            />
+          </View>
+        </TouchableOpacity>
+        
+        
       </View>
       <TouchableOpacity onPress={logOut}>
         <FontAwesome
